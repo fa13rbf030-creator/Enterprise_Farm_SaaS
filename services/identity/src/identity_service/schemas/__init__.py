@@ -8,6 +8,7 @@ from identity_service.schemas.rbac import (
     PermissionCreate,
     PermissionRead,
     RoleCreate,
+    RolePermissionAssignment,
     RoleRead,
     UserRoleAssignment,
 )
@@ -20,6 +21,7 @@ __all__ = [
     "PermissionRead",
     "RefreshTokenRequest",
     "RoleCreate",
+    "RolePermissionAssignment",
     "RoleRead",
     "TokenResponse",
     "UserCreate",

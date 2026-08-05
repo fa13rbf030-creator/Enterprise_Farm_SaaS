@@ -9,6 +9,12 @@ from identity_service.services.authentication import (
 )
 
 __all__ = [
+    "validate_role_for_tenant",
+    "create_role",
+    "create_permission",
+    "assign_roles_to_user",
+    "RbacValidationError",
+    "DuplicatePermissionError",
     "AuthenticatedIdentity",
     "AuthenticationError",
     "DuplicateUserError",
@@ -17,3 +23,12 @@ __all__ = [
     "refresh_identity_tokens",
     "register_user",
 ]
+
+from identity_service.services.rbac import (
+    DuplicatePermissionError,
+    RbacValidationError,
+    assign_roles_to_user,
+    create_permission,
+    create_role,
+    validate_role_for_tenant,
+)

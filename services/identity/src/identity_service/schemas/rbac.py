@@ -46,6 +46,15 @@ class RoleRead(BaseModel):
     is_system: bool
 
 
+class RolePermissionAssignment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    tenant_id: UUID
+    permission_ids: list[UUID] = Field(
+        default_factory=list
+    )
+
+
 class UserRoleAssignment(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
