@@ -1,3 +1,4 @@
+from identity_service.models.audit import AuditEvent
 from identity_service.models.rbac import (
     Permission,
     Role,
@@ -7,6 +8,7 @@ from identity_service.models.rbac import (
 from identity_service.models.user import User
 
 __all__ = [
+    "AuditEvent",
     "Permission",
     "Role",
     "RolePermission",

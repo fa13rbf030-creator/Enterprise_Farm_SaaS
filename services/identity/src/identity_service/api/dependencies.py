@@ -1,12 +1,19 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from uuid import UUID
 
-from fastapi import Depends, HTTPException, status
+from fastapi import (
+    Depends,
+    Header,
+    HTTPException,
+    status,
+)
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from identity_service.core.permissions import has_permission
 from identity_service.core.tokens import (
     TokenType,
     TokenValidationError,
@@ -27,6 +34,11 @@ class CurrentIdentity:
     user: User
     permissions: frozenset[str]
     token_id: UUID
+    tenant_id: UUID
+
+    @property
+    def has_ceo_override(self) -> bool:
+        return self.user.is_superuser or "*" in self.permissions
 
 
 async def get_current_identity(
@@ -66,14 +78,19 @@ async def get_current_identity(
         raise credentials_error
 
     permissions = frozenset(
-        str(permission)
+        str(permission).strip().lower()
         for permission in payload.get("permissions", [])
+        if str(permission).strip()
     )
+
+    if user.is_superuser:
+        permissions = frozenset({*permissions, "*"})
 
     return CurrentIdentity(
         user=user,
         permissions=permissions,
         token_id=token_id,
+        tenant_id=tenant_id,
     )
 
 
@@ -81,3 +98,47 @@ async def get_current_user(
     identity: CurrentIdentity = Depends(get_current_identity),
 ) -> User:
     return identity.user
+
+
+async def enforce_tenant_header(
+    x_tenant_id: UUID = Header(
+        ...,
+        alias="X-Tenant-ID",
+    ),
+    identity: CurrentIdentity = Depends(get_current_identity),
+) -> UUID:
+    if identity.has_ceo_override:
+        return x_tenant_id
+
+    if x_tenant_id != identity.tenant_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tenant access denied",
+        )
+
+    return x_tenant_id
+
+
+def require_permission(
+    permission: str,
+) -> Callable:
+    async def dependency(
+        identity: CurrentIdentity = Depends(
+            get_current_identity
+        ),
+    ) -> CurrentIdentity:
+        if identity.has_ceo_override:
+            return identity
+
+        if not has_permission(
+            identity.permissions,
+            permission,
+        ):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Missing permission: {permission}",
+            )
+
+        return identity
+
+    return dependency

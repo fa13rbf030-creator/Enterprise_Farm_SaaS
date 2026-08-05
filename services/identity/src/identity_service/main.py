@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from identity_service.api.auth import router as auth_router
 from identity_service.api.health import router as health_router
+from identity_service.api.users import router as users_router
 from identity_service.core.config import get_settings
 from identity_service.db.session import engine
 
@@ -25,6 +26,7 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(auth_router)
+app.include_router(users_router)
 
 
 @app.get("/")

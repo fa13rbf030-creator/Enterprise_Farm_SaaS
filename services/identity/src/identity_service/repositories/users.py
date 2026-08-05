@@ -73,3 +73,22 @@ async def get_user_permissions(
 
     result = await session.execute(statement)
     return list(result.scalars().all())
+
+
+async def list_users(
+    session: AsyncSession,
+    *,
+    tenant_id: UUID,
+    offset: int = 0,
+    limit: int = 100,
+) -> list[User]:
+    statement = (
+        select(User)
+        .where(User.tenant_id == tenant_id)
+        .order_by(User.created_at, User.id)
+        .offset(offset)
+        .limit(limit)
+    )
+
+    result = await session.execute(statement)
+    return list(result.scalars().all())
