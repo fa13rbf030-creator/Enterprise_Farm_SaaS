@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "farm-shared"
+version = "0.1.0"
+description = "Shared platform contracts for Enterprise Farm SaaS"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.8,<3",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["farm_shared*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
