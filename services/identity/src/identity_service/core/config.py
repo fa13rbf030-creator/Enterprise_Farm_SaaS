@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     )
     jwt_algorithm: str = "HS256"
     access_token_minutes: int = Field(default=15, ge=1, le=1440)
+    refresh_token_days: int = Field(default=30, ge=1, le=365)
+    token_issuer: str = "enterprise-farm-identity"
 
 
 @lru_cache
