@@ -14,6 +14,7 @@ from identity_service.core.config import get_settings
 class TokenType(StrEnum):
     ACCESS = "access"
     REFRESH = "refresh"
+    MFA_CHALLENGE = "mfa_challenge"
 
 
 class TokenValidationError(ValueError):
@@ -66,6 +67,19 @@ def create_access_token(
         token_type=TokenType.ACCESS,
         expires_delta=timedelta(minutes=settings.access_token_minutes),
         permissions=permissions,
+    )
+
+
+def create_mfa_challenge_token(
+    *,
+    subject: UUID,
+    tenant_id: UUID,
+) -> str:
+    return _create_token(
+        subject=subject,
+        tenant_id=tenant_id,
+        token_type=TokenType.MFA_CHALLENGE,
+        expires_delta=timedelta(minutes=5),
     )
 
 

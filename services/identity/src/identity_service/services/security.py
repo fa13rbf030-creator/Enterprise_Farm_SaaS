@@ -112,7 +112,22 @@ async def confirm_password_reset(
 
     now = datetime.now(UTC)
 
-    user.password_hash = hash_password(new_password)
+    from identity_service.services.password_policy import (
+        PasswordReuseError,
+        replace_user_password,
+    )
+
+    try:
+        await replace_user_password(
+            session,
+            user=user,
+            new_password=new_password,
+        )
+    except PasswordReuseError as exc:
+        raise SecurityValidationError(
+            str(exc)
+        ) from exc
+
     user.password_changed_at = now
     user.failed_login_attempts = 0
     user.locked_until = None

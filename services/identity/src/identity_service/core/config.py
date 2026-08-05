@@ -43,6 +43,27 @@ class Settings(BaseSettings):
         ge=1,
         le=1440,
     )
+    mfa_issuer_name: str = "Enterprise Farm SaaS"
+    mfa_code_window: int = Field(
+        default=1,
+        ge=0,
+        le=3,
+    )
+    recovery_code_count: int = Field(
+        default=10,
+        ge=5,
+        le=20,
+    )
+    session_days: int = Field(
+        default=30,
+        ge=1,
+        le=365,
+    )
+    password_history_count: int = Field(
+        default=5,
+        ge=1,
+        le=24,
+    )
 
 
 @lru_cache

@@ -24,6 +24,7 @@ from identity_service.schemas.auth import (
     RefreshTokenRequest,
     TokenResponse,
 )
+from identity_service.schemas.mfa import MfaLoginChallenge
 from identity_service.schemas.user import UserCreate, UserRead
 from identity_service.services.authentication import (
     AuthenticationError,
@@ -94,7 +95,7 @@ async def register(
 
 @router.post(
     "/login",
-    response_model=TokenResponse,
+    response_model=TokenResponse | MfaLoginChallenge,
 )
 async def login(
     payload: LoginRequest,
@@ -141,10 +142,35 @@ async def login(
         user_agent=get_user_agent(request),
     )
 
-    return build_token_response(
+    from identity_service.core.config import get_settings
+    from identity_service.services.mfa_login import (
+        create_mfa_login_challenge,
+        user_requires_mfa,
+    )
+    from identity_service.services.token_sessions import (
+        issue_token_pair_with_session,
+    )
+
+    if await user_requires_mfa(
+        session,
+        tenant_id=identity.user.tenant_id,
+        user_id=identity.user.id,
+    ):
+        return create_mfa_login_challenge(
+            tenant_id=identity.user.tenant_id,
+            user_id=identity.user.id,
+        )
+
+    settings = get_settings()
+
+    return await issue_token_pair_with_session(
+        session,
         user_id=identity.user.id,
         tenant_id=identity.user.tenant_id,
         permissions=identity.permissions,
+        expires_in=settings.access_token_minutes * 60,
+        ip_address=get_client_ip(request),
+        user_agent=get_user_agent(request),
     )
 
 

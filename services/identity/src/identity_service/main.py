@@ -8,6 +8,8 @@ from identity_service.api.health import router as health_router
 from identity_service.api.users import router as users_router
 from identity_service.api.rbac import router as rbac_router
 from identity_service.api.security import router as security_router
+from identity_service.api.sessions import router as sessions_router
+from identity_service.api.mfa import router as mfa_router
 from identity_service.core.config import get_settings
 from identity_service.db.session import engine
 
@@ -31,6 +33,8 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(rbac_router)
 app.include_router(security_router)
+app.include_router(sessions_router)
+app.include_router(mfa_router)
 
 
 @app.get("/")

@@ -4,6 +4,14 @@ from identity_service.schemas.auth import (
     RefreshTokenRequest,
     TokenResponse,
 )
+from identity_service.schemas.mfa import (
+    MfaDisableRequest,
+    MfaEnrollmentResponse,
+    MfaLoginChallenge,
+    MfaLoginVerifyRequest,
+    MfaRecoveryResponse,
+    MfaVerificationRequest,
+)
 from identity_service.schemas.rbac import (
     PermissionCreate,
     PermissionRead,
@@ -11,6 +19,11 @@ from identity_service.schemas.rbac import (
     RolePermissionAssignment,
     RoleRead,
     UserRoleAssignment,
+)
+from identity_service.schemas.session import (
+    RevokeAllSessionsResponse,
+    SessionRead,
+    SessionTrustUpdate,
 )
 from identity_service.schemas.security import (
     LogoutRequest,
@@ -22,6 +35,15 @@ from identity_service.schemas.security import (
 from identity_service.schemas.user import UserCreate, UserRead
 
 __all__ = [
+    "SessionTrustUpdate",
+    "SessionRead",
+    "RevokeAllSessionsResponse",
+    "MfaVerificationRequest",
+    "MfaRecoveryResponse",
+    "MfaLoginVerifyRequest",
+    "MfaLoginChallenge",
+    "MfaEnrollmentResponse",
+    "MfaDisableRequest",
     "PasswordResetRequest",
     "PasswordResetConfirm",
     "PasswordResetAccepted",
