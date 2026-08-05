@@ -1,3 +1,12 @@
+from finance_service.schemas.posting import (
+    AccountBalanceRead,
+    JournalPostRequest,
+    JournalReverseRequest,
+    JournalStatusRead,
+    PeriodStatusUpdate,
+    TrialBalanceLine,
+    TrialBalanceRead,
+)
 from finance_service.schemas.gl import (
     FiscalPeriodCreate,
     FiscalPeriodRead,
@@ -13,6 +22,13 @@ from finance_service.schemas.gl import (
 )
 
 __all__ = [
+    "TrialBalanceRead",
+    "TrialBalanceLine",
+    "PeriodStatusUpdate",
+    "JournalStatusRead",
+    "JournalReverseRequest",
+    "JournalPostRequest",
+    "AccountBalanceRead",
     "FiscalPeriodCreate",
     "FiscalPeriodRead",
     "FiscalYearCreate",

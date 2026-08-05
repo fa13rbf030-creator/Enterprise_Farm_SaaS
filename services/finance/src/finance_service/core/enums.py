@@ -42,3 +42,16 @@ class JournalSource(StrEnum):
     AGRICULTURE = "agriculture"
     MANUFACTURING = "manufacturing"
     SYSTEM = "system"
+
+
+class BalanceDirection(StrEnum):
+    DEBIT = "debit"
+    CREDIT = "credit"
+    ZERO = "zero"
+
+
+class PeriodAction(StrEnum):
+    OPEN = "open"
+    SOFT_CLOSE = "soft_close"
+    CLOSE = "close"
+    REOPEN = "reopen"

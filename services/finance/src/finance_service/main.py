@@ -7,6 +7,7 @@ from finance_service.api.health import (
     router as health_router,
 )
 from finance_service.api.gl import router as gl_router
+from finance_service.api.posting import router as posting_router
 from finance_service.core.config import get_settings
 from finance_service.db.session import engine
 
@@ -27,6 +28,7 @@ app = FastAPI(
 
 app.include_router(health_router)
 app.include_router(gl_router)
+app.include_router(posting_router)
 
 
 @app.get("/")
