@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy.exc import IntegrityError
@@ -115,12 +116,37 @@ async def authenticate_user(
         email=email,
     )
 
-    if (
-        user is None
-        or not user.is_active
-        or not verify_password(password, user.password_hash)
-    ):
+    if user is None or not user.is_active:
         raise AuthenticationError("Invalid credentials")
+
+    now = datetime.now(UTC)
+    settings = get_settings()
+
+    if (
+        user.locked_until is not None
+        and user.locked_until > now
+    ):
+        raise AuthenticationError("Account temporarily locked")
+
+    if not verify_password(password, user.password_hash):
+        user.failed_login_attempts += 1
+
+        if (
+            user.failed_login_attempts
+            >= settings.max_failed_login_attempts
+        ):
+            user.locked_until = now + timedelta(
+                minutes=settings.account_lockout_minutes
+            )
+
+        await session.commit()
+        raise AuthenticationError("Invalid credentials")
+
+    user.failed_login_attempts = 0
+    user.locked_until = None
+    user.last_login_at = now
+
+    await session.commit()
 
     permissions = await get_user_permissions(
         session,
@@ -142,12 +168,17 @@ async def refresh_identity_tokens(
     *,
     refresh_token: str,
 ) -> TokenResponse:
+    from identity_service.services.security import (
+        SecurityValidationError,
+        ensure_refresh_token_active,
+    )
+
     try:
-        payload = decode_token(
-            refresh_token,
-            expected_type=TokenType.REFRESH,
+        payload = await ensure_refresh_token_active(
+            session,
+            refresh_token=refresh_token,
         )
-    except TokenValidationError as exc:
+    except SecurityValidationError as exc:
         raise AuthenticationError("Invalid refresh token") from exc
 
     user_id = UUID(payload["sub"])

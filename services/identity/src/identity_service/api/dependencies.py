@@ -21,6 +21,9 @@ from identity_service.core.tokens import (
 )
 from identity_service.db.session import get_db_session
 from identity_service.models.user import User
+from identity_service.repositories.security import (
+    is_token_revoked,
+)
 from identity_service.repositories.users import get_user_by_id
 
 
@@ -67,6 +70,12 @@ async def get_current_identity(
         TokenValidationError,
     ) as exc:
         raise credentials_error from exc
+
+    if await is_token_revoked(
+        session,
+        token_id=token_id,
+    ):
+        raise credentials_error
 
     user = await get_user_by_id(
         session,

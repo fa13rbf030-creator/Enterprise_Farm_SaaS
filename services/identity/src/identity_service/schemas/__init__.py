@@ -12,9 +12,21 @@ from identity_service.schemas.rbac import (
     RoleRead,
     UserRoleAssignment,
 )
+from identity_service.schemas.security import (
+    LogoutRequest,
+    LogoutResponse,
+    PasswordResetAccepted,
+    PasswordResetConfirm,
+    PasswordResetRequest,
+)
 from identity_service.schemas.user import UserCreate, UserRead
 
 __all__ = [
+    "PasswordResetRequest",
+    "PasswordResetConfirm",
+    "PasswordResetAccepted",
+    "LogoutResponse",
+    "LogoutRequest",
     "AccessTokenClaims",
     "LoginRequest",
     "PermissionCreate",

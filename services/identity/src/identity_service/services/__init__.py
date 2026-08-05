@@ -9,6 +9,12 @@ from identity_service.services.authentication import (
 )
 
 __all__ = [
+    "revoke_refresh_token",
+    "issue_password_reset",
+    "ensure_refresh_token_active",
+    "confirm_password_reset",
+    "SecurityValidationError",
+    "PasswordResetIssue",
     "validate_role_for_tenant",
     "create_role",
     "create_permission",
@@ -31,4 +37,13 @@ from identity_service.services.rbac import (
     create_permission,
     create_role,
     validate_role_for_tenant,
+)
+
+from identity_service.services.security import (
+    PasswordResetIssue,
+    SecurityValidationError,
+    confirm_password_reset,
+    ensure_refresh_token_active,
+    issue_password_reset,
+    revoke_refresh_token,
 )

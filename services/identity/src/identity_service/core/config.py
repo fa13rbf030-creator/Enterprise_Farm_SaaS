@@ -28,6 +28,22 @@ class Settings(BaseSettings):
     refresh_token_days: int = Field(default=30, ge=1, le=365)
     token_issuer: str = "enterprise-farm-identity"
 
+    password_reset_minutes: int = Field(
+        default=30,
+        ge=5,
+        le=1440,
+    )
+    max_failed_login_attempts: int = Field(
+        default=5,
+        ge=1,
+        le=20,
+    )
+    account_lockout_minutes: int = Field(
+        default=15,
+        ge=1,
+        le=1440,
+    )
+
 
 @lru_cache
 def get_settings() -> Settings:
