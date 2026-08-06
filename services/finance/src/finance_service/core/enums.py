@@ -360,3 +360,79 @@ class StressScenarioType(StrEnum):
     CUSTOMER_DEFAULT = "customer_default"
     SUPPLIER_DISRUPTION = "supplier_disruption"
     COMBINED = "combined"
+
+
+
+class BudgetStatus(StrEnum):
+    DRAFT = "draft"
+    PENDING_APPROVAL = "pending_approval"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    ACTIVE = "active"
+    CLOSED = "closed"
+    CANCELLED = "cancelled"
+
+
+class BudgetType(StrEnum):
+    ANNUAL = "annual"
+    ROLLING = "rolling"
+    CAPITAL = "capital"
+    CASH_FLOW = "cash_flow"
+    OPERATIONAL = "operational"
+
+
+class BudgetVersionStatus(StrEnum):
+    DRAFT = "draft"
+    BASELINE = "baseline"
+    SUPERSEDED = "superseded"
+    ARCHIVED = "archived"
+
+
+class PlanningScenario(StrEnum):
+    BASE = "base"
+    OPTIMISTIC = "optimistic"
+    CONSERVATIVE = "conservative"
+    STRESS = "stress"
+
+
+class CostObjectType(StrEnum):
+    CORPORATE = "corporate"
+    FARM = "farm"
+    BRANCH = "branch"
+    DEPARTMENT = "department"
+    COST_CENTRE = "cost_centre"
+    PROFIT_CENTRE = "profit_centre"
+    CROP = "crop"
+    LIVESTOCK = "livestock"
+    DAIRY = "dairy"
+    POULTRY = "poultry"
+    MANUFACTURING = "manufacturing"
+    PROJECT = "project"
+
+
+class CostAllocationMethod(StrEnum):
+    FIXED_PERCENTAGE = "fixed_percentage"
+    HEADCOUNT = "headcount"
+    AREA = "area"
+    PRODUCTION_VOLUME = "production_volume"
+    REVENUE = "revenue"
+    DIRECT_COST = "direct_cost"
+    ACTIVITY_BASED = "activity_based"
+
+
+class CostingMethod(StrEnum):
+    ACTUAL = "actual"
+    STANDARD = "standard"
+    AVERAGE = "average"
+    ACTIVITY_BASED = "activity_based"
+
+
+class VarianceType(StrEnum):
+    PRICE = "price"
+    QUANTITY = "quantity"
+    LABOUR_RATE = "labour_rate"
+    LABOUR_EFFICIENCY = "labour_efficiency"
+    OVERHEAD_SPENDING = "overhead_spending"
+    OVERHEAD_VOLUME = "overhead_volume"
+    SALES_VOLUME = "sales_volume"
+    BUDGET_ACTUAL = "budget_actual"

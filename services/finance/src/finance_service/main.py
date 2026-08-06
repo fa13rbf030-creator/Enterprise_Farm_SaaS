@@ -15,6 +15,7 @@ from finance_service.api.ap import router as ap_router
 from finance_service.api.banking import router as banking_router
 from finance_service.api.treasury import router as treasury_router
 from finance_service.api.advanced_treasury import router as advanced_treasury_router
+from finance_service.api.budgeting import router as budgeting_router
 from finance_service.api.inquiry import router as inquiry_router
 from finance_service.core.config import get_settings
 from finance_service.db.session import engine
@@ -44,6 +45,7 @@ app.include_router(ap_router)
 app.include_router(banking_router)
 app.include_router(treasury_router)
 app.include_router(advanced_treasury_router)
+app.include_router(budgeting_router)
 app.include_router(inquiry_router)
 
 
