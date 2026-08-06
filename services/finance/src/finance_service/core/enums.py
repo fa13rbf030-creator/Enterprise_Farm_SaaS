@@ -69,3 +69,42 @@ class FiscalYearCloseStatus(StrEnum):
     IN_PROGRESS = "in_progress"
     CLOSED = "closed"
     FAILED = "failed"
+
+
+class CustomerStatus(StrEnum):
+    ACTIVE = "active"
+    ON_HOLD = "on_hold"
+    INACTIVE = "inactive"
+
+
+class InvoiceStatus(StrEnum):
+    DRAFT = "draft"
+    ISSUED = "issued"
+    PARTIALLY_PAID = "partially_paid"
+    PAID = "paid"
+    VOID = "void"
+    CREDITED = "credited"
+
+
+class CreditNoteStatus(StrEnum):
+    DRAFT = "draft"
+    ISSUED = "issued"
+    APPLIED = "applied"
+    VOID = "void"
+
+
+class ReceiptStatus(StrEnum):
+    DRAFT = "draft"
+    POSTED = "posted"
+    PARTIALLY_ALLOCATED = "partially_allocated"
+    ALLOCATED = "allocated"
+    VOID = "void"
+
+
+class PaymentMethod(StrEnum):
+    CASH = "cash"
+    BANK_TRANSFER = "bank_transfer"
+    CHEQUE = "cheque"
+    CARD = "card"
+    MOBILE_WALLET = "mobile_wallet"
+    OTHER = "other"

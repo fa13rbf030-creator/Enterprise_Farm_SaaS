@@ -1,3 +1,14 @@
+from finance_service.repositories.ar import (
+    get_credit_note,
+    get_customer,
+    get_invoice,
+    get_receipt,
+    get_receipt_allocation,
+    list_customer_invoices,
+    list_customers,
+    list_invoice_lines,
+    list_outstanding_invoices,
+)
 from finance_service.repositories.year_close import (
     count_open_periods,
     get_fiscal_year_with_lock,
@@ -37,6 +48,15 @@ from finance_service.repositories.gl import (
 )
 
 __all__ = [
+    "list_outstanding_invoices",
+    "list_invoice_lines",
+    "list_customers",
+    "list_customer_invoices",
+    "get_receipt_allocation",
+    "get_receipt",
+    "get_invoice",
+    "get_customer",
+    "get_credit_note",
     "list_year_periods",
     "list_temporary_account_balances",
     "get_retained_earnings_account",
