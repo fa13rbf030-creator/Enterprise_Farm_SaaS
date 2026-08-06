@@ -250,3 +250,27 @@ from finance_service.services.intercompany import (
     create_intercompany_relationship,
     create_intercompany_transaction,
 )
+
+from finance_service.services.financial_close_calculations import (
+    FinancialCloseCalculationError,
+    calculate_close_completion_percentage,
+    calculate_close_variance,
+    calculate_close_variance_percentage,
+    calculate_materiality_threshold,
+    calculate_trial_balance_difference,
+    calculate_unreconciled_difference,
+    is_exception_material,
+    is_trial_balance_balanced,
+    quantize_close_money,
+)
+
+from finance_service.services.financial_close import (
+    FinancialCloseWorkflowError,
+    create_close_cycle,
+    create_close_exception,
+    lock_financial_period,
+    open_close_cycle,
+    sign_off_close_cycle,
+    unlock_financial_period,
+    update_close_task_status,
+)

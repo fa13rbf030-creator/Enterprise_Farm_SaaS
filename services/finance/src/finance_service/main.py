@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from finance_service.api.intercompany import router as intercompany_router
+from finance_service.api.financial_close import router as financial_close_router
 
 
 from fastapi import FastAPI
@@ -51,6 +52,7 @@ app.include_router(advanced_treasury_router)
 app.include_router(budgeting_router)
 app.include_router(fixed_assets_router)
 app.include_router(intercompany_router)
+app.include_router(financial_close_router)
 app.include_router(inquiry_router)
 
 

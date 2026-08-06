@@ -498,3 +498,77 @@ class AssetProjectStatus(StrEnum):
     READY_FOR_CAPITALIZATION = "ready_for_capitalization"
     CAPITALIZED = "capitalized"
     CANCELLED = "cancelled"
+
+
+
+class FinancialCloseCycleType(StrEnum):
+    MONTH_END = "month_end"
+    QUARTER_END = "quarter_end"
+    YEAR_END = "year_end"
+    SPECIAL = "special"
+
+
+class FinancialCloseStatus(StrEnum):
+    DRAFT = "draft"
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    REVIEW = "review"
+    SOFT_CLOSED = "soft_closed"
+    HARD_CLOSED = "hard_closed"
+    REOPENED = "reopened"
+    CANCELLED = "cancelled"
+
+
+class FinancialCloseTaskStatus(StrEnum):
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    BLOCKED = "blocked"
+    SUBMITTED = "submitted"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    WAIVED = "waived"
+
+
+class FinancialCloseTaskType(StrEnum):
+    JOURNAL_REVIEW = "journal_review"
+    BANK_RECONCILIATION = "bank_reconciliation"
+    AR_RECONCILIATION = "ar_reconciliation"
+    AP_RECONCILIATION = "ap_reconciliation"
+    INVENTORY_RECONCILIATION = "inventory_reconciliation"
+    FIXED_ASSET_DEPRECIATION = "fixed_asset_depreciation"
+    INTERCOMPANY_RECONCILIATION = "intercompany_reconciliation"
+    FX_TRANSLATION = "fx_translation"
+    ELIMINATION = "elimination"
+    TRIAL_BALANCE_VALIDATION = "trial_balance_validation"
+    FINANCIAL_STATEMENTS = "financial_statements"
+    MANAGEMENT_REVIEW = "management_review"
+    AUDIT_PACKAGE = "audit_package"
+    PERIOD_LOCK = "period_lock"
+    YEAR_END_ROLLOVER = "year_end_rollover"
+
+
+class FinancialCloseExceptionSeverity(StrEnum):
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+
+class FinancialCloseExceptionStatus(StrEnum):
+    OPEN = "open"
+    UNDER_REVIEW = "under_review"
+    RESOLVED = "resolved"
+    WAIVED = "waived"
+
+
+class FinancialCloseSignOffRole(StrEnum):
+    PREPARER = "preparer"
+    REVIEWER = "reviewer"
+    CONTROLLER = "controller"
+    CFO = "cfo"
+    AUDITOR = "auditor"
+
+
+class PeriodLockType(StrEnum):
+    SOFT = "soft"
+    HARD = "hard"

@@ -1,3 +1,8 @@
+from finance_service.repositories.financial_close import (
+    get_active_period_lock,
+    get_close_cycle,
+    get_close_task,
+)
 from finance_service.repositories.intercompany import (
     get_account_mapping,
     get_consolidation_group,
