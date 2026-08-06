@@ -1,3 +1,8 @@
+from finance_service.repositories.fixed_assets import (
+    get_asset_category,
+    get_asset_location,
+    get_fixed_asset,
+)
 from finance_service.repositories.budgeting import (
     get_budget,
     get_cost_centre,

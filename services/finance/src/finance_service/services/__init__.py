@@ -205,3 +205,26 @@ from finance_service.services.budgeting import (
     get_budget_detail,
     submit_budget_for_approval,
 )
+
+from finance_service.services.fixed_asset_calculations import (
+    FixedAssetCalculationError,
+    calculate_depreciable_amount,
+    calculate_disposal_gain_loss,
+    calculate_reducing_balance_depreciation,
+    calculate_revaluation_surplus,
+    calculate_straight_line_depreciation,
+    calculate_units_of_production_depreciation,
+    quantize_asset_money,
+)
+
+from finance_service.services.fixed_assets import (
+    FixedAssetWorkflowError,
+    create_asset_category,
+    create_asset_location,
+    create_depreciation_book,
+    create_fixed_asset,
+    dispose_asset,
+    impair_asset,
+    revalue_asset,
+    transfer_asset,
+)

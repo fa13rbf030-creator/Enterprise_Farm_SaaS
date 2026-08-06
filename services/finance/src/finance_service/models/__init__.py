@@ -1,3 +1,14 @@
+from finance_service.models.fixed_assets import (
+    FixedAsset,
+    FixedAssetCapitalProject,
+    FixedAssetCategory,
+    FixedAssetDepreciationBook,
+    FixedAssetDisposal,
+    FixedAssetInsurance,
+    FixedAssetLocation,
+    FixedAssetTransaction,
+    FixedAssetWarranty,
+)
 from finance_service.models.budgeting import (
     FinanceBudget,
     FinanceBudgetLine,

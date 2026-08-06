@@ -1,3 +1,18 @@
+from finance_service.schemas.fixed_assets import (
+    AssetCategoryCreate,
+    AssetCategoryRead,
+    AssetDisposalCreate,
+    AssetDisposalRead,
+    AssetImpairmentCreate,
+    AssetLocationCreate,
+    AssetLocationRead,
+    AssetRevaluationCreate,
+    AssetTransferCreate,
+    DepreciationBookCreate,
+    DepreciationBookRead,
+    FixedAssetCreate,
+    FixedAssetRead,
+)
 from finance_service.schemas.budgeting import (
     BudgetApprovalRequest,
     BudgetCreate,

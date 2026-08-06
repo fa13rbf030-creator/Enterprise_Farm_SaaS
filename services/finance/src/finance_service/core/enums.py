@@ -436,3 +436,65 @@ class VarianceType(StrEnum):
     OVERHEAD_VOLUME = "overhead_volume"
     SALES_VOLUME = "sales_volume"
     BUDGET_ACTUAL = "budget_actual"
+
+
+
+class AssetStatus(StrEnum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    UNDER_MAINTENANCE = "under_maintenance"
+    IDLE = "idle"
+    IMPAIRED = "impaired"
+    HELD_FOR_SALE = "held_for_sale"
+    DISPOSED = "disposed"
+    RETIRED = "retired"
+
+
+class AssetAcquisitionType(StrEnum):
+    PURCHASE = "purchase"
+    CONSTRUCTION = "construction"
+    LEASE = "lease"
+    DONATION = "donation"
+    TRANSFER_IN = "transfer_in"
+    OPENING_BALANCE = "opening_balance"
+
+
+class DepreciationMethod(StrEnum):
+    STRAIGHT_LINE = "straight_line"
+    REDUCING_BALANCE = "reducing_balance"
+    UNITS_OF_PRODUCTION = "units_of_production"
+    NO_DEPRECIATION = "no_depreciation"
+
+
+class DepreciationBookType(StrEnum):
+    IFRS = "ifrs"
+    TAX = "tax"
+    MANAGEMENT = "management"
+
+
+class AssetTransactionType(StrEnum):
+    ACQUISITION = "acquisition"
+    CAPITALIZATION = "capitalization"
+    DEPRECIATION = "depreciation"
+    TRANSFER = "transfer"
+    REVALUATION = "revaluation"
+    IMPAIRMENT = "impairment"
+    DISPOSAL = "disposal"
+    RETIREMENT = "retirement"
+
+
+class AssetDisposalType(StrEnum):
+    SALE = "sale"
+    SCRAP = "scrap"
+    DONATION = "donation"
+    WRITE_OFF = "write_off"
+    TRADE_IN = "trade_in"
+
+
+class AssetProjectStatus(StrEnum):
+    DRAFT = "draft"
+    APPROVED = "approved"
+    IN_PROGRESS = "in_progress"
+    READY_FOR_CAPITALIZATION = "ready_for_capitalization"
+    CAPITALIZED = "capitalized"
+    CANCELLED = "cancelled"
