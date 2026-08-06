@@ -50,6 +50,7 @@ async def post_journal(
     tenant_id: UUID,
     journal_id: UUID,
     posted_by: UUID,
+    allow_closed_period: bool = False,
 ) -> JournalEntry:
     journal = await get_journal_with_lock(
         session,
@@ -72,10 +73,16 @@ async def post_journal(
         )
 
     try:
-        validate_journal_can_post(
-            journal_status=journal.status,
-            period_status=period.status,
-        )
+        if allow_closed_period:
+            if journal.status != JournalStatus.DRAFT:
+                raise PostingRuleError(
+                    "Only draft journals can be posted"
+                )
+        else:
+            validate_journal_can_post(
+                journal_status=journal.status,
+                period_status=period.status,
+            )
     except PostingRuleError as exc:
         raise PostingValidationError(str(exc)) from exc
 

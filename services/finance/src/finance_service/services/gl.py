@@ -166,6 +166,7 @@ async def create_draft_journal(
     session: AsyncSession,
     *,
     payload: JournalEntryCreate,
+    allow_closed_period: bool = False,
 ) -> JournalEntry:
     period = await get_fiscal_period(
         session,
@@ -178,7 +179,10 @@ async def create_draft_journal(
             "Fiscal period not found in tenant"
         )
 
-    if period.status != FiscalPeriodStatus.OPEN:
+    if (
+        period.status != FiscalPeriodStatus.OPEN
+        and not allow_closed_period
+    ):
         raise GlValidationError(
             "Journal can only be created in an open period"
         )

@@ -55,3 +55,17 @@ class PeriodAction(StrEnum):
     SOFT_CLOSE = "soft_close"
     CLOSE = "close"
     REOPEN = "reopen"
+
+
+class OpeningBalanceStatus(StrEnum):
+    DRAFT = "draft"
+    VALIDATED = "validated"
+    POSTED = "posted"
+    REJECTED = "rejected"
+
+
+class FiscalYearCloseStatus(StrEnum):
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    CLOSED = "closed"
+    FAILED = "failed"

@@ -8,6 +8,9 @@ from finance_service.api.health import (
 )
 from finance_service.api.gl import router as gl_router
 from finance_service.api.posting import router as posting_router
+from finance_service.api.opening_balances import router as opening_balances_router
+from finance_service.api.year_close import router as year_close_router
+from finance_service.api.inquiry import router as inquiry_router
 from finance_service.core.config import get_settings
 from finance_service.db.session import engine
 
@@ -29,6 +32,9 @@ app = FastAPI(
 app.include_router(health_router)
 app.include_router(gl_router)
 app.include_router(posting_router)
+app.include_router(opening_balances_router)
+app.include_router(year_close_router)
+app.include_router(inquiry_router)
 
 
 @app.get("/")

@@ -1,3 +1,17 @@
+from finance_service.schemas.inquiry import (
+    JournalSearchItem,
+    LedgerInquiryLine,
+    LedgerInquiryRead,
+)
+from finance_service.schemas.closing import (
+    FiscalYearClosePreview,
+    FiscalYearClosePreviewLine,
+    FiscalYearCloseRead,
+    FiscalYearCloseRequest,
+    OpeningBalanceBatchCreate,
+    OpeningBalanceBatchRead,
+    OpeningBalanceLineCreate,
+)
 from finance_service.schemas.posting import (
     AccountBalanceRead,
     JournalPostRequest,
@@ -22,6 +36,16 @@ from finance_service.schemas.gl import (
 )
 
 __all__ = [
+    "FiscalYearClosePreviewLine",
+    "FiscalYearClosePreview",
+    "OpeningBalanceLineCreate",
+    "OpeningBalanceBatchRead",
+    "OpeningBalanceBatchCreate",
+    "LedgerInquiryRead",
+    "LedgerInquiryLine",
+    "JournalSearchItem",
+    "FiscalYearCloseRequest",
+    "FiscalYearCloseRead",
     "TrialBalanceRead",
     "TrialBalanceLine",
     "PeriodStatusUpdate",

@@ -1,3 +1,22 @@
+from finance_service.repositories.year_close import (
+    count_open_periods,
+    get_fiscal_year_with_lock,
+    get_last_year_period,
+    get_retained_earnings_account,
+    list_temporary_account_balances,
+    list_year_periods,
+)
+from finance_service.repositories.inquiry import (
+    get_account_balance_for_period,
+    get_ledger_account_for_inquiry,
+    list_account_activity,
+    search_journals,
+)
+from finance_service.repositories.closing import (
+    get_opening_balance_batch,
+    get_year_close_run,
+    list_opening_balance_lines,
+)
 from finance_service.repositories.posting import (
     create_posting_audit,
     get_balance,
@@ -18,6 +37,19 @@ from finance_service.repositories.gl import (
 )
 
 __all__ = [
+    "list_year_periods",
+    "list_temporary_account_balances",
+    "get_retained_earnings_account",
+    "get_last_year_period",
+    "get_fiscal_year_with_lock",
+    "count_open_periods",
+    "search_journals",
+    "list_opening_balance_lines",
+    "list_account_activity",
+    "get_year_close_run",
+    "get_opening_balance_batch",
+    "get_ledger_account_for_inquiry",
+    "get_account_balance_for_period",
     "list_period_balances",
     "list_journal_lines_for_posting",
     "get_period_with_lock",

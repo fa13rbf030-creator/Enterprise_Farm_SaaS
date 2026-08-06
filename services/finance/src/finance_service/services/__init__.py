@@ -51,3 +51,34 @@ from finance_service.services.posting import (
     reverse_journal,
     update_period_status,
 )
+
+from finance_service.services.opening_balances import (
+    OpeningBalanceValidationError,
+    calculate_opening_balance_totals,
+    validate_opening_balance_batch,
+)
+
+from finance_service.services.year_close_rules import (
+    FiscalYearCloseRuleError,
+    is_temporary_account,
+    validate_year_can_close,
+)
+
+from finance_service.services.inquiry import (
+    InquiryValidationError,
+    build_journal_search,
+    build_ledger_inquiry,
+)
+
+from finance_service.services.opening_balance_workflow import (
+    OpeningBalanceWorkflowError,
+    create_opening_balance_batch,
+    post_opening_balance_batch,
+    validate_opening_balance_batch_record,
+)
+
+from finance_service.services.year_close import (
+    FiscalYearCloseWorkflowError,
+    close_fiscal_year,
+    preview_fiscal_year_close,
+)
