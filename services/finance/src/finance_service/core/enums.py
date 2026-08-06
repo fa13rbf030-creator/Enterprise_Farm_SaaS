@@ -108,3 +108,33 @@ class PaymentMethod(StrEnum):
     CARD = "card"
     MOBILE_WALLET = "mobile_wallet"
     OTHER = "other"
+
+
+class VendorStatus(StrEnum):
+    ACTIVE = "active"
+    ON_HOLD = "on_hold"
+    INACTIVE = "inactive"
+
+
+class SupplierInvoiceStatus(StrEnum):
+    DRAFT = "draft"
+    POSTED = "posted"
+    PARTIALLY_PAID = "partially_paid"
+    PAID = "paid"
+    VOID = "void"
+    DEBITED = "debited"
+
+
+class DebitNoteStatus(StrEnum):
+    DRAFT = "draft"
+    ISSUED = "issued"
+    APPLIED = "applied"
+    VOID = "void"
+
+
+class VendorPaymentStatus(StrEnum):
+    DRAFT = "draft"
+    POSTED = "posted"
+    PARTIALLY_ALLOCATED = "partially_allocated"
+    ALLOCATED = "allocated"
+    VOID = "void"

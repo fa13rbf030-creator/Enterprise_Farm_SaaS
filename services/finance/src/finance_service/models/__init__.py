@@ -1,3 +1,11 @@
+from finance_service.models.ap import (
+    SupplierInvoice,
+    SupplierInvoiceLine,
+    VendorAccount,
+    VendorDebitNote,
+    VendorPayment,
+    VendorPaymentAllocation,
+)
 from finance_service.models.ar import (
     CustomerAccount,
     CustomerCreditNote,
@@ -24,6 +32,12 @@ from finance_service.models.posting import (
 )
 
 __all__ = [
+    "VendorPaymentAllocation",
+    "VendorPayment",
+    "VendorDebitNote",
+    "VendorAccount",
+    "SupplierInvoiceLine",
+    "SupplierInvoice",
     "ReceiptAllocation",
     "CustomerReceipt",
     "CustomerInvoiceLine",

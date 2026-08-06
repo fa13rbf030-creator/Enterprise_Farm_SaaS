@@ -1,3 +1,14 @@
+from finance_service.repositories.ap import (
+    get_supplier_invoice,
+    get_vendor,
+    get_vendor_debit_note,
+    get_vendor_payment,
+    get_vendor_payment_allocation,
+    list_outstanding_supplier_invoices,
+    list_supplier_invoice_lines,
+    list_vendor_invoices,
+    list_vendors,
+)
 from finance_service.repositories.ar import (
     get_credit_note,
     get_customer,
@@ -48,6 +59,15 @@ from finance_service.repositories.gl import (
 )
 
 __all__ = [
+    "list_vendors",
+    "list_vendor_invoices",
+    "list_supplier_invoice_lines",
+    "list_outstanding_supplier_invoices",
+    "get_vendor_payment_allocation",
+    "get_vendor_payment",
+    "get_vendor_debit_note",
+    "get_vendor",
+    "get_supplier_invoice",
     "list_outstanding_invoices",
     "list_invoice_lines",
     "list_customers",

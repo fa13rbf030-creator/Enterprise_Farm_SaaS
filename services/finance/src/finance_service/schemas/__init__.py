@@ -1,3 +1,18 @@
+from finance_service.schemas.ap import (
+    DebitNoteCreate,
+    DebitNoteRead,
+    PayablesAgingRead,
+    SupplierInvoiceCreate,
+    SupplierInvoiceDetailRead,
+    SupplierInvoiceLineCreate,
+    SupplierInvoiceLineRead,
+    SupplierInvoiceRead,
+    VendorCreate,
+    VendorPaymentAllocationCreate,
+    VendorPaymentCreate,
+    VendorPaymentRead,
+    VendorRead,
+)
 from finance_service.schemas.ar import (
     CreditNoteApplyRequest,
     CustomerAgingRead,
@@ -55,6 +70,19 @@ from finance_service.schemas.gl import (
 )
 
 __all__ = [
+    "VendorRead",
+    "VendorPaymentRead",
+    "VendorPaymentCreate",
+    "VendorPaymentAllocationCreate",
+    "VendorCreate",
+    "SupplierInvoiceRead",
+    "SupplierInvoiceLineRead",
+    "SupplierInvoiceLineCreate",
+    "SupplierInvoiceDetailRead",
+    "SupplierInvoiceCreate",
+    "PayablesAgingRead",
+    "DebitNoteRead",
+    "DebitNoteCreate",
     "ReceiptPostRequest",
     "InvoiceLineRead",
     "InvoiceDetailRead",
