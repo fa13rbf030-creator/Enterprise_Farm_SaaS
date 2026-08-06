@@ -42,6 +42,7 @@ class JournalSource(StrEnum):
     AGRICULTURE = "agriculture"
     MANUFACTURING = "manufacturing"
     SYSTEM = "system"
+    BANK_RECONCILIATION = "bank_reconciliation"
 
 
 class BalanceDirection(StrEnum):
@@ -138,3 +139,45 @@ class VendorPaymentStatus(StrEnum):
     PARTIALLY_ALLOCATED = "partially_allocated"
     ALLOCATED = "allocated"
     VOID = "void"
+
+
+class BankAccountStatus(StrEnum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    CLOSED = "closed"
+
+
+class BankAccountType(StrEnum):
+    CURRENT = "current"
+    SAVINGS = "savings"
+    CASH = "cash"
+    PETTY_CASH = "petty_cash"
+    MOBILE_WALLET = "mobile_wallet"
+
+
+class BankStatementStatus(StrEnum):
+    DRAFT = "draft"
+    IMPORTED = "imported"
+    IN_RECONCILIATION = "in_reconciliation"
+    RECONCILED = "reconciled"
+    VOID = "void"
+
+
+class BankStatementLineType(StrEnum):
+    CREDIT = "credit"
+    DEBIT = "debit"
+
+
+class ReconciliationStatus(StrEnum):
+    DRAFT = "draft"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+
+
+class ReconciliationMatchType(StrEnum):
+    EXACT = "exact"
+    PARTIAL = "partial"
+    MANUAL = "manual"
+    BANK_CHARGE = "bank_charge"
+    BANK_INTEREST = "bank_interest"

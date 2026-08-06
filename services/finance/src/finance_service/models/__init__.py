@@ -1,3 +1,10 @@
+from finance_service.models.banking import (
+    BankAccount,
+    BankReconciliation,
+    BankReconciliationMatch,
+    BankStatement,
+    BankStatementLine,
+)
 from finance_service.models.ap import (
     SupplierInvoice,
     SupplierInvoiceLine,
@@ -32,6 +39,11 @@ from finance_service.models.posting import (
 )
 
 __all__ = [
+    "BankStatementLine",
+    "BankStatement",
+    "BankReconciliationMatch",
+    "BankReconciliation",
+    "BankAccount",
     "VendorPaymentAllocation",
     "VendorPayment",
     "VendorDebitNote",

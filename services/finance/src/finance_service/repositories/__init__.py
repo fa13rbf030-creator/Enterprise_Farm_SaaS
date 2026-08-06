@@ -1,3 +1,14 @@
+from finance_service.repositories.banking import (
+    get_bank_account,
+    get_bank_statement,
+    get_posted_journal,
+    get_reconciliation,
+    get_reconciliation_match_for_line,
+    get_statement_line,
+    list_bank_accounts,
+    list_reconciliation_matches,
+    list_statement_lines,
+)
 from finance_service.repositories.ap import (
     get_supplier_invoice,
     get_vendor,
@@ -59,6 +70,15 @@ from finance_service.repositories.gl import (
 )
 
 __all__ = [
+    "list_statement_lines",
+    "list_reconciliation_matches",
+    "list_bank_accounts",
+    "get_statement_line",
+    "get_reconciliation_match_for_line",
+    "get_reconciliation",
+    "get_posted_journal",
+    "get_bank_statement",
+    "get_bank_account",
     "list_vendors",
     "list_vendor_invoices",
     "list_supplier_invoice_lines",

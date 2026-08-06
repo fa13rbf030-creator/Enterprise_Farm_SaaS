@@ -12,6 +12,7 @@ from finance_service.api.opening_balances import router as opening_balances_rout
 from finance_service.api.year_close import router as year_close_router
 from finance_service.api.ar import router as ar_router
 from finance_service.api.ap import router as ap_router
+from finance_service.api.banking import router as banking_router
 from finance_service.api.inquiry import router as inquiry_router
 from finance_service.core.config import get_settings
 from finance_service.db.session import engine
@@ -38,6 +39,7 @@ app.include_router(opening_balances_router)
 app.include_router(year_close_router)
 app.include_router(ar_router)
 app.include_router(ap_router)
+app.include_router(banking_router)
 app.include_router(inquiry_router)
 
 
