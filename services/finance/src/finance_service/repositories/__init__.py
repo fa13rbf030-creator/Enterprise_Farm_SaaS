@@ -1,3 +1,13 @@
+from finance_service.repositories.treasury import (
+    get_batch_approval,
+    get_liquidity_forecast,
+    get_treasury_batch,
+    get_treasury_item,
+    list_batch_approvals,
+    list_liquidity_forecasts,
+    list_treasury_batches,
+    list_treasury_items,
+)
 from finance_service.repositories.banking import (
     get_bank_account,
     get_bank_statement,
@@ -70,6 +80,14 @@ from finance_service.repositories.gl import (
 )
 
 __all__ = [
+    "list_treasury_items",
+    "list_treasury_batches",
+    "list_liquidity_forecasts",
+    "list_batch_approvals",
+    "get_treasury_item",
+    "get_treasury_batch",
+    "get_liquidity_forecast",
+    "get_batch_approval",
     "list_statement_lines",
     "list_reconciliation_matches",
     "list_bank_accounts",

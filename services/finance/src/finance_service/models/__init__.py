@@ -1,3 +1,9 @@
+from finance_service.models.treasury import (
+    LiquidityForecast,
+    TreasuryBatchApproval,
+    TreasuryPaymentBatch,
+    TreasuryPaymentItem,
+)
 from finance_service.models.banking import (
     BankAccount,
     BankReconciliation,
@@ -39,6 +45,10 @@ from finance_service.models.posting import (
 )
 
 __all__ = [
+    "TreasuryPaymentItem",
+    "TreasuryPaymentBatch",
+    "TreasuryBatchApproval",
+    "LiquidityForecast",
     "BankStatementLine",
     "BankStatement",
     "BankReconciliationMatch",

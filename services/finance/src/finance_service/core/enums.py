@@ -181,3 +181,57 @@ class ReconciliationMatchType(StrEnum):
     MANUAL = "manual"
     BANK_CHARGE = "bank_charge"
     BANK_INTEREST = "bank_interest"
+
+
+class TreasuryPaymentBatchStatus(StrEnum):
+    DRAFT = "draft"
+    PENDING_APPROVAL = "pending_approval"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    GENERATED = "generated"
+    SUBMITTED = "submitted"
+    PARTIALLY_SETTLED = "partially_settled"
+    SETTLED = "settled"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+
+class TreasuryPaymentItemStatus(StrEnum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    SUBMITTED = "submitted"
+    SETTLED = "settled"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+
+class TreasuryApprovalDecision(StrEnum):
+    APPROVED = "approved"
+    REJECTED = "rejected"
+
+
+class TreasuryFileFormat(StrEnum):
+    ISO20022_PAIN_001 = "iso20022_pain_001"
+    CSV = "csv"
+    FIXED_WIDTH = "fixed_width"
+    BANK_API = "bank_api"
+
+
+class SettlementStatus(StrEnum):
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    REJECTED = "rejected"
+    RETURNED = "returned"
+
+
+class LiquidityForecastScenario(StrEnum):
+    BASE = "base"
+    CONSERVATIVE = "conservative"
+    STRESS = "stress"
+
+
+class FraudCheckStatus(StrEnum):
+    PASSED = "passed"
+    REVIEW_REQUIRED = "review_required"
+    BLOCKED = "blocked"
