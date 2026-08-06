@@ -235,3 +235,128 @@ class FraudCheckStatus(StrEnum):
     PASSED = "passed"
     REVIEW_REQUIRED = "review_required"
     BLOCKED = "blocked"
+
+
+class TreasuryEntityType(StrEnum):
+    TENANT = "tenant"
+    LEGAL_ENTITY = "legal_entity"
+    BUSINESS_UNIT = "business_unit"
+
+
+class CashPoolType(StrEnum):
+    PHYSICAL = "physical"
+    NOTIONAL = "notional"
+    ZERO_BALANCE = "zero_balance"
+    TARGET_BALANCE = "target_balance"
+
+
+class CashPoolStatus(StrEnum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    CLOSED = "closed"
+
+
+class TreasuryTransferStatus(StrEnum):
+    DRAFT = "draft"
+    PENDING_APPROVAL = "pending_approval"
+    APPROVED = "approved"
+    EXECUTED = "executed"
+    REJECTED = "rejected"
+    CANCELLED = "cancelled"
+    FAILED = "failed"
+
+
+class FxExposureType(StrEnum):
+    RECEIVABLE = "receivable"
+    PAYABLE = "payable"
+    FORECAST_INFLOW = "forecast_inflow"
+    FORECAST_OUTFLOW = "forecast_outflow"
+    LOAN = "loan"
+    INVESTMENT = "investment"
+
+
+class FxExposureStatus(StrEnum):
+    OPEN = "open"
+    PARTIALLY_HEDGED = "partially_hedged"
+    FULLY_HEDGED = "fully_hedged"
+    SETTLED = "settled"
+    CANCELLED = "cancelled"
+
+
+class HedgeInstrumentType(StrEnum):
+    FORWARD = "forward"
+    FUTURE = "future"
+    OPTION = "option"
+    SWAP = "swap"
+    NATURAL_HEDGE = "natural_hedge"
+
+
+class HedgeStatus(StrEnum):
+    PROPOSED = "proposed"
+    APPROVED = "approved"
+    ACTIVE = "active"
+    MATURED = "matured"
+    TERMINATED = "terminated"
+    CANCELLED = "cancelled"
+
+
+class DebtInstrumentType(StrEnum):
+    TERM_LOAN = "term_loan"
+    REVOLVING_CREDIT = "revolving_credit"
+    OVERDRAFT = "overdraft"
+    ISLAMIC_FINANCING = "islamic_financing"
+    BOND = "bond"
+    LEASE = "lease"
+
+
+class DebtStatus(StrEnum):
+    DRAFT = "draft"
+    ACTIVE = "active"
+    MATURED = "matured"
+    REPAID = "repaid"
+    DEFAULTED = "defaulted"
+    CANCELLED = "cancelled"
+
+
+class TradeFinanceInstrumentType(StrEnum):
+    LETTER_OF_CREDIT = "letter_of_credit"
+    BANK_GUARANTEE = "bank_guarantee"
+    STANDBY_LC = "standby_lc"
+
+
+class TradeFinanceStatus(StrEnum):
+    DRAFT = "draft"
+    REQUESTED = "requested"
+    ISSUED = "issued"
+    AMENDED = "amended"
+    UTILIZED = "utilized"
+    EXPIRED = "expired"
+    RELEASED = "released"
+    CANCELLED = "cancelled"
+
+
+class InvestmentType(StrEnum):
+    TERM_DEPOSIT = "term_deposit"
+    MONEY_MARKET = "money_market"
+    GOVERNMENT_SECURITY = "government_security"
+    SUKUK = "sukuk"
+    MUTUAL_FUND = "mutual_fund"
+
+
+class InvestmentStatus(StrEnum):
+    PROPOSED = "proposed"
+    APPROVED = "approved"
+    ACTIVE = "active"
+    MATURED = "matured"
+    REDEEMED = "redeemed"
+    CANCELLED = "cancelled"
+
+
+class StressScenarioType(StrEnum):
+    LIQUIDITY_SHOCK = "liquidity_shock"
+    FX_DEPRECIATION = "fx_depreciation"
+    INTEREST_RATE_SHOCK = "interest_rate_shock"
+    CUSTOMER_DEFAULT = "customer_default"
+    SUPPLIER_DISRUPTION = "supplier_disruption"
+    COMBINED = "combined"

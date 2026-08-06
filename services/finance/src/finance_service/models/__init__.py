@@ -1,3 +1,14 @@
+from finance_service.models.advanced_treasury import (
+    TreasuryCashPool,
+    TreasuryCashPoolMember,
+    TreasuryDebtInstrument,
+    TreasuryFxExposure,
+    TreasuryHedgeContract,
+    TreasuryIntercompanyTransfer,
+    TreasuryInvestment,
+    TreasuryStressTest,
+    TreasuryTradeFinanceInstrument,
+)
 from finance_service.models.treasury import (
     LiquidityForecast,
     TreasuryBatchApproval,
@@ -45,6 +56,15 @@ from finance_service.models.posting import (
 )
 
 __all__ = [
+    "TreasuryTradeFinanceInstrument",
+    "TreasuryStressTest",
+    "TreasuryInvestment",
+    "TreasuryIntercompanyTransfer",
+    "TreasuryHedgeContract",
+    "TreasuryFxExposure",
+    "TreasuryDebtInstrument",
+    "TreasuryCashPoolMember",
+    "TreasuryCashPool",
     "TreasuryPaymentItem",
     "TreasuryPaymentBatch",
     "TreasuryBatchApproval",
