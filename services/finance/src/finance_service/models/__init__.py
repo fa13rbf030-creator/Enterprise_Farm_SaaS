@@ -1,3 +1,14 @@
+from finance_service.models.intercompany import (
+    ConsolidationGroup,
+    ConsolidationGroupMember,
+    ConsolidationPeriod,
+    CurrencyTranslationRule,
+    EliminationRule,
+    IntercompanyAccountMapping,
+    IntercompanyOrganization,
+    IntercompanyRelationship,
+    IntercompanyTransaction,
+)
 from finance_service.models.fixed_assets import (
     FixedAsset,
     FixedAssetCapitalProject,

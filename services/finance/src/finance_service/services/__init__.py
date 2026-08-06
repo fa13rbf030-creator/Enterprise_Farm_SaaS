@@ -228,3 +228,25 @@ from finance_service.services.fixed_assets import (
     revalue_asset,
     transfer_asset,
 )
+
+from finance_service.services.intercompany_calculations import (
+    IntercompanyCalculationError,
+    calculate_base_amount,
+    calculate_elimination_amount,
+    calculate_intercompany_difference,
+    calculate_non_controlling_interest,
+    calculate_ownership_share,
+    calculate_translated_amount,
+    is_intercompany_match,
+    quantize_intercompany_money,
+)
+
+from finance_service.services.intercompany import (
+    IntercompanyWorkflowError,
+    create_consolidation_group,
+    create_consolidation_period,
+    create_intercompany_account_mapping,
+    create_intercompany_organization,
+    create_intercompany_relationship,
+    create_intercompany_transaction,
+)

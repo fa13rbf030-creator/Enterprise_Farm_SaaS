@@ -1,3 +1,18 @@
+from finance_service.schemas.intercompany import (
+    ConsolidationGroupCreate,
+    ConsolidationGroupMemberCreate,
+    ConsolidationGroupRead,
+    ConsolidationPeriodCreate,
+    ConsolidationPeriodRead,
+    IntercompanyAccountMappingCreate,
+    IntercompanyAccountMappingRead,
+    IntercompanyOrganizationCreate,
+    IntercompanyOrganizationRead,
+    IntercompanyRelationshipCreate,
+    IntercompanyRelationshipRead,
+    IntercompanyTransactionCreate,
+    IntercompanyTransactionRead,
+)
 from finance_service.schemas.fixed_assets import (
     AssetCategoryCreate,
     AssetCategoryRead,

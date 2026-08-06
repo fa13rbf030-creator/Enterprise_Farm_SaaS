@@ -1,3 +1,10 @@
+from finance_service.repositories.intercompany import (
+    get_account_mapping,
+    get_consolidation_group,
+    get_consolidation_period,
+    get_intercompany_organization,
+    get_intercompany_transaction,
+)
 from finance_service.repositories.fixed_assets import (
     get_asset_category,
     get_asset_location,
