@@ -1,3 +1,16 @@
+from finance_service.models.tax_compliance import (
+    StatutoryFiling,
+    StatutoryFilingStatus,
+    TaxCode,
+    TaxJurisdiction,
+    TaxPeriod,
+    TaxRate,
+    TaxRegistration,
+    TaxReturn,
+    TaxReturnStatus,
+    TaxType,
+    WithholdingTaxRule,
+)
 from finance_service.models.financial_reporting import (
     FinancialDisclosureDefinition,
     FinancialReportDefinition,

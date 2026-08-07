@@ -1,3 +1,10 @@
+from finance_service.repositories.tax_compliance import (
+    get_tax_code,
+    get_tax_jurisdiction,
+    get_tax_period,
+    get_tax_registration,
+    get_tax_return,
+)
 from finance_service.repositories.financial_reporting import (
     get_report_definition,
     get_report_layout,

@@ -1,3 +1,20 @@
+from finance_service.schemas.tax_compliance import (
+    StatutoryFilingCreate,
+    StatutoryFilingRead,
+    TaxCodeCreate,
+    TaxCodeRead,
+    TaxJurisdictionCreate,
+    TaxJurisdictionRead,
+    TaxPeriodCreate,
+    TaxPeriodRead,
+    TaxRateCreate,
+    TaxRateRead,
+    TaxRegistrationCreate,
+    TaxRegistrationRead,
+    TaxReturnCreate,
+    TaxReturnRead,
+    WithholdingTaxRuleCreate,
+)
 from finance_service.schemas.financial_reporting import (
     FinancialDisclosureDefinitionCreate,
     FinancialDisclosureDefinitionRead,

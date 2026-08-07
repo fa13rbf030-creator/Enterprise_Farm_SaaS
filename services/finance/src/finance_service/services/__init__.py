@@ -1,3 +1,14 @@
+from finance_service.services.tax_compliance import (
+    TaxComplianceWorkflowError,
+    create_statutory_filing,
+    create_tax_code,
+    create_tax_jurisdiction,
+    create_tax_period,
+    create_tax_rate,
+    create_tax_registration,
+    create_tax_return,
+    create_withholding_rule,
+)
 from finance_service.services.balances import (
     calculate_net_balance,
     determine_balance_direction,
