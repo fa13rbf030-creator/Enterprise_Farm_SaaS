@@ -1,3 +1,15 @@
+from finance_service.models.islamic_finance import (
+    IslamicAssessmentStatus,
+    IslamicAssessmentType,
+    IslamicDisbursementEvidence,
+    IslamicRuleStatus,
+    LivestockZakatRule,
+    NisabReference,
+    SadaqahTransaction,
+    ShariahRuleSet,
+    UshrAssessment,
+    ZakatAssessment,
+)
 from finance_service.models.tax_compliance import (
     StatutoryFiling,
     StatutoryFilingStatus,

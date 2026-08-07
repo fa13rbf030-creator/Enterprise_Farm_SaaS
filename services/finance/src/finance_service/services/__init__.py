@@ -1,3 +1,14 @@
+from finance_service.services.islamic_finance import (
+    IslamicFinanceWorkflowError,
+    approve_shariah_rule_set,
+    create_disbursement_evidence,
+    create_livestock_zakat_rule,
+    create_nisab_reference,
+    create_sadaqah_transaction,
+    create_shariah_rule_set,
+    create_ushr_assessment,
+    create_zakat_assessment,
+)
 from finance_service.services.tax_compliance import (
     TaxComplianceWorkflowError,
     create_statutory_filing,
@@ -313,4 +324,16 @@ from finance_service.services.financial_reporting import (
     create_report_run,
     create_report_snapshot,
     start_report_run,
+)
+
+from finance_service.services.islamic_finance_calculations import (
+    IslamicFinanceCalculationError,
+    calculate_crop_ushr,
+    calculate_livestock_assessment_value,
+    calculate_monetary_zakat,
+    calculate_sadaqah_amount,
+    calculate_zakatable_base,
+    is_hawl_complete,
+    is_nisab_met,
+    quantize_islamic_money,
 )

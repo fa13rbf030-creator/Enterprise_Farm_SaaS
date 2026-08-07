@@ -4,6 +4,7 @@ from finance_service.api.intercompany import router as intercompany_router
 from finance_service.api.financial_close import router as financial_close_router
 from finance_service.api.financial_reporting import router as financial_reporting_router
 from finance_service.api.tax_compliance import router as tax_compliance_router
+from finance_service.api.islamic_finance import router as islamic_finance_router
 
 
 from fastapi import FastAPI
@@ -57,6 +58,7 @@ app.include_router(intercompany_router)
 app.include_router(financial_close_router)
 app.include_router(financial_reporting_router)
 app.include_router(tax_compliance_router)
+app.include_router(islamic_finance_router)
 app.include_router(inquiry_router)
 
 

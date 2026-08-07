@@ -1,3 +1,9 @@
+from finance_service.repositories.islamic_finance import (
+    get_nisab_reference,
+    get_shariah_rule_set,
+    get_ushr_assessment,
+    get_zakat_assessment,
+)
 from finance_service.repositories.tax_compliance import (
     get_tax_code,
     get_tax_jurisdiction,
