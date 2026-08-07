@@ -572,3 +572,65 @@ class FinancialCloseSignOffRole(StrEnum):
 class PeriodLockType(StrEnum):
     SOFT = "soft"
     HARD = "hard"
+
+
+
+class FinancialReportType(StrEnum):
+    TRIAL_BALANCE = "trial_balance"
+    BALANCE_SHEET = "balance_sheet"
+    INCOME_STATEMENT = "income_statement"
+    CASH_FLOW = "cash_flow"
+    CHANGES_IN_EQUITY = "changes_in_equity"
+    BUDGET_VS_ACTUAL = "budget_vs_actual"
+    SEGMENT_REPORT = "segment_report"
+    CONSOLIDATED_STATEMENT = "consolidated_statement"
+    CFO_DASHBOARD = "cfo_dashboard"
+
+
+class FinancialReportStatus(StrEnum):
+    DRAFT = "draft"
+    QUEUED = "queued"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    ARCHIVED = "archived"
+
+
+class FinancialReportBasis(StrEnum):
+    ACCRUAL = "accrual"
+    CASH = "cash"
+
+
+class FinancialReportStandard(StrEnum):
+    IFRS = "ifrs"
+    GAAP = "gaap"
+    LOCAL = "local"
+
+
+class FinancialReportPeriodType(StrEnum):
+    MONTH = "month"
+    QUARTER = "quarter"
+    YEAR = "year"
+    CUSTOM = "custom"
+
+
+class CashFlowClassification(StrEnum):
+    OPERATING = "operating"
+    INVESTING = "investing"
+    FINANCING = "financing"
+
+
+class FinancialReportLineType(StrEnum):
+    HEADER = "header"
+    ACCOUNT = "account"
+    SUBTOTAL = "subtotal"
+    TOTAL = "total"
+    FORMULA = "formula"
+    DISCLOSURE = "disclosure"
+
+
+class FinancialReportPresentation(StrEnum):
+    SINGLE_PERIOD = "single_period"
+    COMPARATIVE = "comparative"
+    MULTI_PERIOD = "multi_period"
+    CONSOLIDATED = "consolidated"
