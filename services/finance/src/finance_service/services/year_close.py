@@ -31,8 +31,15 @@ from finance_service.schemas.gl import (
     JournalEntryCreate,
     JournalLineCreate,
 )
-from finance_service.services.gl import create_draft_journal
-from finance_service.services.posting import post_journal
+from finance_service.services.gl import (
+    DuplicateFinanceRecordError,
+    GlValidationError,
+    create_draft_journal,
+)
+from finance_service.services.posting import (
+    PostingValidationError,
+    post_journal,
+)
 from finance_service.services.year_close_rules import (
     FiscalYearCloseRuleError,
     validate_year_can_close,
@@ -326,7 +333,11 @@ async def close_fiscal_year(
             posted_by=started_by,
             allow_closed_period=True,
         )
-    except Exception as exc:
+    except (
+        GlValidationError,
+        DuplicateFinanceRecordError,
+        PostingValidationError,
+    ) as exc:
         current_run.status = FiscalYearCloseStatus.FAILED
         current_run.error_message = str(exc)[:1000]
         await session.commit()

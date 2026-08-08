@@ -51,7 +51,7 @@ async def get_fiscal_year_close_preview(
         )
     except FiscalYearCloseWorkflowError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(exc),
         ) from exc
 
@@ -89,6 +89,6 @@ async def post_fiscal_year_close(
         )
     except FiscalYearCloseWorkflowError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(exc),
         ) from exc

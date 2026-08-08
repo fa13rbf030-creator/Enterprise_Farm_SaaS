@@ -57,7 +57,7 @@ async def post_opening_balance_batch_create(
         )
     except OpeningBalanceWorkflowError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(exc),
         ) from exc
 
@@ -84,7 +84,7 @@ async def validate_opening_balance_endpoint(
         )
     except OpeningBalanceWorkflowError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(exc),
         ) from exc
 
@@ -117,6 +117,6 @@ async def post_opening_balance_endpoint(
         )
     except OpeningBalanceWorkflowError as exc:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=str(exc),
         ) from exc

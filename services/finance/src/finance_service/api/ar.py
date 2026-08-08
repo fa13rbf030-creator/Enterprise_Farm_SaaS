@@ -56,7 +56,7 @@ router = APIRouter(
 
 def translate_ar_error(exc: ArWorkflowError) -> HTTPException:
     return HTTPException(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         detail=str(exc),
     )
 
