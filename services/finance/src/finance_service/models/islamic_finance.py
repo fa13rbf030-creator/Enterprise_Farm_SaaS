@@ -380,7 +380,7 @@ class LivestockZakatRule(Base):
         ),
         CheckConstraint(
             "maximum_count IS NULL OR maximum_count >= minimum_count",
-            name="ck_finance_livestock_zakat_count_range",
+            name="count_range",
         ),
     )
 

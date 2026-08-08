@@ -210,7 +210,7 @@ class FinancialReportLayoutLine(Base):
         ),
         CheckConstraint(
             "display_order >= 0",
-            name="ck_finance_report_layout_line_display_order",
+            name="display_order",
         ),
         Index(
             "ix_finance_report_layout_line_tenant",

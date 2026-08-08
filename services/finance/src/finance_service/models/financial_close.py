@@ -254,7 +254,7 @@ class FinancialCloseTaskDependency(Base):
         ),
         CheckConstraint(
             "task_id <> depends_on_task_id",
-            name="ck_finance_close_task_no_self_dependency",
+            name="no_self_dependency",
         ),
     )
 

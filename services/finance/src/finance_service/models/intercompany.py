@@ -235,7 +235,7 @@ class IntercompanyAccountMapping(Base):
         ),
         CheckConstraint(
             "source_organization_id <> destination_organization_id",
-            name="ck_ic_account_mapping_distinct_companies",
+            name="distinct_orgs",
         ),
         Index(
             "ix_ic_account_mapping_tenant",
@@ -401,11 +401,11 @@ class ConsolidationGroupMember(Base):
         ),
         CheckConstraint(
             "ownership_percentage >= 0 AND ownership_percentage <= 100",
-            name="ck_consolidation_member_ownership_percentage",
+            name="ownership_pct",
         ),
         CheckConstraint(
             "voting_percentage >= 0 AND voting_percentage <= 100",
-            name="ck_consolidation_member_voting_percentage",
+            name="voting_pct",
         ),
         Index(
             "ix_finance_consolidation_member_tenant",
@@ -484,7 +484,7 @@ class ConsolidationPeriod(Base):
         ),
         CheckConstraint(
             "period_end >= period_start",
-            name="ck_consolidation_period_valid_range",
+            name="valid_range",
         ),
         Index(
             "ix_finance_consolidation_period_tenant",
@@ -714,11 +714,11 @@ class IntercompanyTransaction(Base):
         ),
         CheckConstraint(
             "source_organization_id <> destination_organization_id",
-            name="ck_intercompany_transaction_distinct_companies",
+            name="distinct_orgs",
         ),
         CheckConstraint(
             "amount > 0",
-            name="ck_intercompany_transaction_positive_amount",
+            name="positive_amount",
         ),
         Index(
             "ix_finance_intercompany_transaction_tenant",
