@@ -19,6 +19,9 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from procurement_service.core.enums import (
+    InvoiceMatchStatus,
+    InvoiceMatchLineStatus,
+    InvoiceMatchExceptionType,
     GoodsReceiptLineStatus,
     GoodsReceiptStatus,
     InspectionStatus,
@@ -1246,5 +1249,357 @@ class GoodsReceiptLine(Base):
     )
 
     goods_receipt: Mapped[GoodsReceipt] = relationship(
+        back_populates="lines",
+    )
+
+
+class SupplierInvoiceMatch(Base):
+    __tablename__ = "procurement_supplier_invoice_matches"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "supplier_id",
+            "supplier_invoice_number",
+            name="uq_procurement_invoice_match_supplier_invoice",
+        ),
+        Index(
+            "ix_procurement_match_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+        Index(
+            "ix_procurement_match_tenant_po",
+            "tenant_id",
+            "purchase_order_id",
+        ),
+        Index(
+            "ix_procurement_match_tenant_supplier",
+            "tenant_id",
+            "supplier_id",
+        ),
+        CheckConstraint(
+            "invoice_subtotal >= 0",
+            name="inv_subtotal_nonneg",
+        ),
+        CheckConstraint(
+            "invoice_tax_amount >= 0",
+            name="match_tax_nonnegative",
+        ),
+        CheckConstraint(
+            "invoice_total >= 0",
+            name="match_total_nonnegative",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    supplier_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_suppliers.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    purchase_order_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_orders.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    goods_receipt_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_goods_receipts.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    supplier_invoice_number: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    supplier_invoice_date: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+    )
+
+    currency_code: Mapped[str] = mapped_column(
+        String(3),
+        nullable=False,
+        default="PKR",
+    )
+
+    invoice_subtotal: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    invoice_tax_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    invoice_total: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    quantity_tolerance_percent: Mapped[Decimal] = mapped_column(
+        Numeric(9, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    price_tolerance_percent: Mapped[Decimal] = mapped_column(
+        Numeric(9, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    tax_tolerance_percent: Mapped[Decimal] = mapped_column(
+        Numeric(9, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    status: Mapped[InvoiceMatchStatus] = mapped_column(
+        Enum(
+            InvoiceMatchStatus,
+            name="procurement_invoice_match_status",
+        ),
+        nullable=False,
+        default=InvoiceMatchStatus.PENDING,
+    )
+
+    exception_type: Mapped[InvoiceMatchExceptionType] = mapped_column(
+        Enum(
+            InvoiceMatchExceptionType,
+            name="procurement_invoice_match_exception_type",
+        ),
+        nullable=False,
+        default=InvoiceMatchExceptionType.NONE,
+    )
+
+    matched_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    approved_by: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+    )
+
+    approved_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    finance_ap_invoice_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment=(
+            "Reference to Finance/AP invoice after "
+            "successful procurement handoff."
+        ),
+    )
+
+    finance_handoff_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    dispute_reason: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    lines: Mapped[list["SupplierInvoiceMatchLine"]] = relationship(
+        back_populates="invoice_match",
+        cascade="all, delete-orphan",
+    )
+
+
+class SupplierInvoiceMatchLine(Base):
+    __tablename__ = "procurement_supplier_invoice_match_lines"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "invoice_match_id",
+            "line_number",
+            name="uq_procurement_invoice_match_line_number",
+        ),
+        CheckConstraint(
+            "invoiced_quantity > 0",
+            name="inv_line_qty_pos",
+        ),
+        CheckConstraint(
+            "invoiced_unit_price >= 0",
+            name="inv_ln_price_nonneg",
+        ),
+        CheckConstraint(
+            "invoiced_tax_amount >= 0",
+            name="inv_line_tax_nonneg",
+        ),
+        CheckConstraint(
+            "invoiced_line_total >= 0",
+            name="inv_ln_total_nonneg",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    invoice_match_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_supplier_invoice_matches.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    purchase_order_line_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_order_lines.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    goods_receipt_line_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_goods_receipt_lines.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    line_number: Mapped[int] = mapped_column(
+        nullable=False,
+    )
+
+    item_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Inventory item master.",
+    )
+
+    description: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False,
+    )
+
+    invoiced_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    invoiced_unit_price: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    invoiced_tax_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    invoiced_line_total: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    po_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    received_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    po_unit_price: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    quantity_variance: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    price_variance: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    tax_variance: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    status: Mapped[InvoiceMatchLineStatus] = mapped_column(
+        Enum(
+            InvoiceMatchLineStatus,
+            name="procurement_invoice_match_line_status",
+        ),
+        nullable=False,
+        default=InvoiceMatchLineStatus.MATCHED,
+    )
+
+    exception_notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    invoice_match: Mapped[SupplierInvoiceMatch] = relationship(
         back_populates="lines",
     )
