@@ -19,6 +19,10 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from procurement_service.core.enums import (
+    SupplierReturnStatus,
+    SupplierReturnReason,
+    SupplierReturnLineStatus,
+    SupplierClaimStatus,
     InvoiceMatchStatus,
     InvoiceMatchLineStatus,
     InvoiceMatchExceptionType,
@@ -1601,5 +1605,345 @@ class SupplierInvoiceMatchLine(Base):
     )
 
     invoice_match: Mapped[SupplierInvoiceMatch] = relationship(
+        back_populates="lines",
+    )
+
+
+class SupplierReturn(Base):
+    __tablename__ = "procurement_supplier_returns"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "return_number",
+            name="uq_procurement_supplier_return_number",
+        ),
+        Index(
+            "ix_procurement_return_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+        Index(
+            "ix_procurement_return_tenant_supplier",
+            "tenant_id",
+            "supplier_id",
+        ),
+        Index(
+            "ix_procurement_return_tenant_receipt",
+            "tenant_id",
+            "goods_receipt_id",
+        ),
+        CheckConstraint(
+            "estimated_return_value >= 0",
+            name="return_value_nonneg",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    return_number: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    supplier_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_suppliers.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    purchase_order_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_orders.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    goods_receipt_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_goods_receipts.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    invoice_match_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_supplier_invoice_matches.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    status: Mapped[SupplierReturnStatus] = mapped_column(
+        Enum(
+            SupplierReturnStatus,
+            name="procurement_supplier_return_status",
+        ),
+        nullable=False,
+        default=SupplierReturnStatus.DRAFT,
+    )
+
+    claim_status: Mapped[SupplierClaimStatus] = mapped_column(
+        Enum(
+            SupplierClaimStatus,
+            name="procurement_supplier_claim_status",
+        ),
+        nullable=False,
+        default=SupplierClaimStatus.NOT_REQUIRED,
+    )
+
+    supplier_return_authorization: Mapped[str | None] = mapped_column(
+        String(150),
+        nullable=True,
+    )
+
+    requested_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    authorized_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    dispatched_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    supplier_received_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    requested_by: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+    )
+
+    approved_by: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+    )
+
+    warehouse_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Warehouse service.",
+    )
+
+    shipment_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Logistics/Fleet service.",
+    )
+
+    estimated_return_value: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    supplier_claim_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    supplier_credit_reference: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    finance_ap_adjustment_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment=(
+            "Reference to Finance/AP debit-credit adjustment "
+            "created after return settlement."
+        ),
+    )
+
+    finance_handoff_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    rejection_reason: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    lines: Mapped[list["SupplierReturnLine"]] = relationship(
+        back_populates="supplier_return",
+        cascade="all, delete-orphan",
+    )
+
+
+class SupplierReturnLine(Base):
+    __tablename__ = "procurement_supplier_return_lines"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "supplier_return_id",
+            "line_number",
+            name="uq_procurement_supplier_return_line_number",
+        ),
+        CheckConstraint(
+            "return_quantity > 0",
+            name="return_line_qty_pos",
+        ),
+        CheckConstraint(
+            "unit_value >= 0",
+            name="return_line_unit_nonneg",
+        ),
+        CheckConstraint(
+            "line_value >= 0",
+            name="return_line_value_nonneg",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    supplier_return_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_supplier_returns.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    goods_receipt_line_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_goods_receipt_lines.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    purchase_order_line_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_order_lines.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    line_number: Mapped[int] = mapped_column(
+        nullable=False,
+    )
+
+    item_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Inventory item master.",
+    )
+
+    lot_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    batch_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    return_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    unit_of_measure: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+
+    unit_value: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    line_value: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    reason: Mapped[SupplierReturnReason] = mapped_column(
+        Enum(
+            SupplierReturnReason,
+            name="procurement_supplier_return_reason",
+        ),
+        nullable=False,
+    )
+
+    status: Mapped[SupplierReturnLineStatus] = mapped_column(
+        Enum(
+            SupplierReturnLineStatus,
+            name="procurement_supplier_return_line_status",
+        ),
+        nullable=False,
+        default=SupplierReturnLineStatus.PENDING,
+    )
+
+    inspection_reference: Mapped[str | None] = mapped_column(
+        String(150),
+        nullable=True,
+    )
+
+    quality_case_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Quality/Laboratory service.",
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    supplier_return: Mapped[SupplierReturn] = relationship(
         back_populates="lines",
     )
