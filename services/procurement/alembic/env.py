@@ -12,6 +12,10 @@ from procurement_service.models import (
     ProcurementSupplier,
     PurchaseRequisition,
     PurchaseRequisitionLine,
+    RequestForQuotation,
+    RequestForQuotationLine,
+    SupplierQuotation,
+    SupplierQuotationLine,
 )  # noqa: F401
 
 

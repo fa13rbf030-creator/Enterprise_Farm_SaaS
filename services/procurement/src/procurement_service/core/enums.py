@@ -24,3 +24,20 @@ class RequisitionPriority(StrEnum):
     NORMAL = "NORMAL"
     HIGH = "HIGH"
     URGENT = "URGENT"
+
+
+class RfqStatus(StrEnum):
+    DRAFT = "DRAFT"
+    ISSUED = "ISSUED"
+    CLOSED = "CLOSED"
+    CANCELLED = "CANCELLED"
+    AWARDED = "AWARDED"
+
+
+class QuotationStatus(StrEnum):
+    DRAFT = "DRAFT"
+    SUBMITTED = "SUBMITTED"
+    UNDER_EVALUATION = "UNDER_EVALUATION"
+    ACCEPTED = "ACCEPTED"
+    REJECTED = "REJECTED"
+    WITHDRAWN = "WITHDRAWN"
