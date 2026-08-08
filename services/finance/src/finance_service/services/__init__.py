@@ -1,3 +1,12 @@
+from finance_service.services.finance_controls import (
+    FinanceControlWorkflowError,
+    create_audit_evidence,
+    create_control_attestation,
+    create_control_definition,
+    create_control_exception,
+    create_control_execution,
+    create_reconciliation_run,
+)
 from finance_service.services.islamic_finance import (
     IslamicFinanceWorkflowError,
     approve_shariah_rule_set,
@@ -336,4 +345,16 @@ from finance_service.services.islamic_finance_calculations import (
     is_hawl_complete,
     is_nisab_met,
     quantize_islamic_money,
+)
+
+from finance_service.services.finance_control_calculations import (
+    FinanceControlCalculationError,
+    calculate_attestation_completion,
+    calculate_control_effectiveness,
+    calculate_control_health_score,
+    calculate_exception_rate,
+    calculate_reconciliation_variance,
+    calculate_residual_risk_score,
+    is_reconciliation_within_tolerance,
+    quantize_control_percentage,
 )
