@@ -1,5 +1,7 @@
 from procurement_service.models.procurement import (
     ProcurementSupplier,
+    PurchaseOrder,
+    PurchaseOrderLine,
     PurchaseRequisition,
     PurchaseRequisitionLine,
     RequestForQuotation,
@@ -10,6 +12,8 @@ from procurement_service.models.procurement import (
 
 __all__ = [
     "ProcurementSupplier",
+    "PurchaseOrder",
+    "PurchaseOrderLine",
     "PurchaseRequisition",
     "PurchaseRequisitionLine",
     "RequestForQuotation",

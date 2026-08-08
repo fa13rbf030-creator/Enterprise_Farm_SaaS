@@ -10,6 +10,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from procurement_service.db.base import Base
 from procurement_service.models import (
     ProcurementSupplier,
+    PurchaseOrder,
+    PurchaseOrderLine,
     PurchaseRequisition,
     PurchaseRequisitionLine,
     RequestForQuotation,

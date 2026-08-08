@@ -19,6 +19,8 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from procurement_service.core.enums import (
+    PurchaseOrderLineStatus,
+    PurchaseOrderStatus,
     QuotationStatus,
     RequisitionPriority,
     RequisitionStatus,
@@ -642,5 +644,339 @@ class SupplierQuotationLine(Base):
     )
 
     quotation: Mapped[SupplierQuotation] = relationship(
+        back_populates="lines",
+    )
+
+
+class PurchaseOrder(Base):
+    __tablename__ = "procurement_purchase_orders"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "po_number",
+            name="uq_procurement_po_number",
+        ),
+        Index(
+            "ix_procurement_po_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+        Index(
+            "ix_procurement_po_tenant_supplier",
+            "tenant_id",
+            "supplier_id",
+        ),
+        CheckConstraint(
+            "subtotal_amount >= 0",
+            name="po_subtotal_nonnegative",
+        ),
+        CheckConstraint(
+            "discount_amount >= 0",
+            name="po_discount_nonnegative",
+        ),
+        CheckConstraint(
+            "tax_amount >= 0",
+            name="po_tax_nonnegative",
+        ),
+        CheckConstraint(
+            "total_amount >= 0",
+            name="po_total_nonnegative",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    po_number: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    supplier_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_suppliers.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    source_quotation_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_supplier_quotations.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    requisition_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_requisitions.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    order_date: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+    )
+
+    expected_delivery_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+    )
+
+    currency_code: Mapped[str] = mapped_column(
+        String(3),
+        nullable=False,
+        default="PKR",
+    )
+
+    subtotal_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    discount_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    tax_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    total_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    payment_terms: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    delivery_terms: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    delivery_location: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    status: Mapped[PurchaseOrderStatus] = mapped_column(
+        Enum(
+            PurchaseOrderStatus,
+            name="procurement_purchase_order_status",
+        ),
+        nullable=False,
+        default=PurchaseOrderStatus.DRAFT,
+    )
+
+    requested_by: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+    )
+
+    approved_by: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+    )
+
+    approved_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    issued_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    cancelled_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    cancellation_reason: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    lines: Mapped[list["PurchaseOrderLine"]] = relationship(
+        back_populates="purchase_order",
+        cascade="all, delete-orphan",
+    )
+
+
+class PurchaseOrderLine(Base):
+    __tablename__ = "procurement_purchase_order_lines"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "purchase_order_id",
+            "line_number",
+            name="uq_procurement_po_line_number",
+        ),
+        CheckConstraint(
+            "ordered_quantity > 0",
+            name="po_line_qty_positive",
+        ),
+        CheckConstraint(
+            "unit_price >= 0",
+            name="po_line_price_nonnegative",
+        ),
+        CheckConstraint(
+            "discount_amount >= 0",
+            name="po_line_disc_nonneg",
+        ),
+        CheckConstraint(
+            "tax_amount >= 0",
+            name="po_line_tax_nonnegative",
+        ),
+        CheckConstraint(
+            "line_total >= 0",
+            name="po_line_total_nonnegative",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    purchase_order_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_orders.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    line_number: Mapped[int] = mapped_column(
+        nullable=False,
+    )
+
+    requisition_line_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_requisition_lines.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    quotation_line_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey(
+            "procurement_supplier_quotation_lines.id",
+            ondelete="SET NULL",
+        ),
+        nullable=True,
+    )
+
+    item_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Inventory item master.",
+    )
+
+    description: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False,
+    )
+
+    ordered_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    unit_of_measure: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+
+    unit_price: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    discount_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    tax_amount: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    line_total: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    expected_delivery_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+    )
+
+    status: Mapped[PurchaseOrderLineStatus] = mapped_column(
+        Enum(
+            PurchaseOrderLineStatus,
+            name="procurement_purchase_order_line_status",
+        ),
+        nullable=False,
+        default=PurchaseOrderLineStatus.OPEN,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    purchase_order: Mapped[PurchaseOrder] = relationship(
         back_populates="lines",
     )
