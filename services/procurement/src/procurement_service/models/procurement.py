@@ -19,6 +19,9 @@ from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from procurement_service.core.enums import (
+    GoodsReceiptLineStatus,
+    GoodsReceiptStatus,
+    InspectionStatus,
     PurchaseOrderLineStatus,
     PurchaseOrderStatus,
     QuotationStatus,
@@ -978,5 +981,270 @@ class PurchaseOrderLine(Base):
     )
 
     purchase_order: Mapped[PurchaseOrder] = relationship(
+        back_populates="lines",
+    )
+
+
+class GoodsReceipt(Base):
+    __tablename__ = "procurement_goods_receipts"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "receipt_number",
+            name="uq_procurement_goods_receipt_number",
+        ),
+        Index(
+            "ix_procurement_receipt_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+        Index(
+            "ix_procurement_receipt_tenant_po",
+            "tenant_id",
+            "purchase_order_id",
+        ),
+        Index(
+            "ix_procurement_receipt_tenant_supplier",
+            "tenant_id",
+            "supplier_id",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    receipt_number: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+    )
+
+    purchase_order_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_orders.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    supplier_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_suppliers.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    received_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    received_by: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+    )
+
+    warehouse_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Warehouse service.",
+    )
+
+    delivery_note_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    supplier_invoice_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    status: Mapped[GoodsReceiptStatus] = mapped_column(
+        Enum(
+            GoodsReceiptStatus,
+            name="procurement_goods_receipt_status",
+        ),
+        nullable=False,
+        default=GoodsReceiptStatus.DRAFT,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    lines: Mapped[list["GoodsReceiptLine"]] = relationship(
+        back_populates="goods_receipt",
+        cascade="all, delete-orphan",
+    )
+
+
+class GoodsReceiptLine(Base):
+    __tablename__ = "procurement_goods_receipt_lines"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "goods_receipt_id",
+            "line_number",
+            name="uq_procurement_receipt_line_number",
+        ),
+        CheckConstraint(
+            "received_quantity > 0",
+            name="receipt_qty_positive",
+        ),
+        CheckConstraint(
+            "accepted_quantity >= 0",
+            name="receipt_accept_nonnegative",
+        ),
+        CheckConstraint(
+            "rejected_quantity >= 0",
+            name="receipt_reject_nonnegative",
+        ),
+        CheckConstraint(
+            "accepted_quantity + rejected_quantity <= received_quantity",
+            name="receipt_disposition_valid",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    goods_receipt_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_goods_receipts.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    purchase_order_line_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            "procurement_purchase_order_lines.id",
+            ondelete="RESTRICT",
+        ),
+        nullable=False,
+    )
+
+    line_number: Mapped[int] = mapped_column(
+        nullable=False,
+    )
+
+    item_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Inventory item master.",
+    )
+
+    warehouse_location_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+        comment="Reference to Warehouse storage location.",
+    )
+
+    description: Mapped[str] = mapped_column(
+        String(500),
+        nullable=False,
+    )
+
+    received_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+    )
+
+    accepted_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    rejected_quantity: Mapped[Decimal] = mapped_column(
+        Numeric(24, 6),
+        nullable=False,
+        default=Decimal("0"),
+    )
+
+    unit_of_measure: Mapped[str] = mapped_column(
+        String(50),
+        nullable=False,
+    )
+
+    lot_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    batch_number: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+
+    expiry_date: Mapped[date | None] = mapped_column(
+        Date,
+        nullable=True,
+    )
+
+    inspection_status: Mapped[InspectionStatus] = mapped_column(
+        Enum(
+            InspectionStatus,
+            name="procurement_receipt_inspection_status",
+        ),
+        nullable=False,
+        default=InspectionStatus.NOT_REQUIRED,
+    )
+
+    status: Mapped[GoodsReceiptLineStatus] = mapped_column(
+        Enum(
+            GoodsReceiptLineStatus,
+            name="procurement_goods_receipt_line_status",
+        ),
+        nullable=False,
+        default=GoodsReceiptLineStatus.RECEIVED,
+    )
+
+    rejection_reason: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    notes: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    goods_receipt: Mapped[GoodsReceipt] = relationship(
         back_populates="lines",
     )

@@ -1,4 +1,6 @@
 from procurement_service.models.procurement import (
+    GoodsReceipt,
+    GoodsReceiptLine,
     ProcurementSupplier,
     PurchaseOrder,
     PurchaseOrderLine,
@@ -11,6 +13,8 @@ from procurement_service.models.procurement import (
 )
 
 __all__ = [
+    "GoodsReceipt",
+    "GoodsReceiptLine",
     "ProcurementSupplier",
     "PurchaseOrder",
     "PurchaseOrderLine",
