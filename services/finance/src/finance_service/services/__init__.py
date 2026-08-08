@@ -1,3 +1,9 @@
+from finance_service.services.finance_analytics import (
+    FinanceAnalyticsWorkflowError,
+    approve_finance_analytics_snapshot,
+    build_cfo_executive_dashboard,
+    create_finance_analytics_snapshot,
+)
 from finance_service.services.finance_controls import (
     FinanceControlWorkflowError,
     create_audit_evidence,

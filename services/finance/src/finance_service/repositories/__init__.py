@@ -1,3 +1,7 @@
+from finance_service.repositories.finance_analytics import (
+    get_finance_analytics_snapshot,
+    get_latest_finance_analytics_snapshot,
+)
 from finance_service.repositories.finance_controls import (
     get_control_definition,
     get_control_execution,

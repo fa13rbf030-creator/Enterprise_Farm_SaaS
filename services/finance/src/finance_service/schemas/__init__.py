@@ -1,3 +1,9 @@
+from finance_service.schemas.finance_analytics import (
+    CFOExecutiveDashboardRead,
+    FinanceAnalyticsSnapshotApprove,
+    FinanceAnalyticsSnapshotCreate,
+    FinanceAnalyticsSnapshotRead,
+)
 from finance_service.schemas.finance_controls import (
     FinanceAuditEvidenceCreate,
     FinanceAuditEvidenceRead,
