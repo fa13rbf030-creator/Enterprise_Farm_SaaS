@@ -14,11 +14,15 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
     func,
+    Integer,
 )
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from procurement_service.core.enums import (
+    ApprovalObjectType,
+    ApprovalRequestStatus,
+    ApprovalStepStatus,
     SupplierReturnStatus,
     SupplierReturnReason,
     SupplierReturnLineStatus,
@@ -1946,4 +1950,207 @@ class SupplierReturnLine(Base):
 
     supplier_return: Mapped[SupplierReturn] = relationship(
         back_populates="lines",
+    )
+
+
+class ProcurementApprovalRequest(Base):
+    __tablename__ = "procurement_approval_requests"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "tenant_id",
+            "object_type",
+            "object_id",
+            name="uq_proc_approval_object",
+        ),
+        Index(
+            "ix_proc_approval_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+        Index(
+            "ix_proc_approval_tenant_object",
+            "tenant_id",
+            "object_type",
+            "object_id",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    object_type: Mapped[ApprovalObjectType] = mapped_column(
+        Enum(
+            ApprovalObjectType,
+            name="procurement_approval_object_type",
+        ),
+        nullable=False,
+    )
+
+    object_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+    )
+
+    status: Mapped[ApprovalRequestStatus] = mapped_column(
+        Enum(
+            ApprovalRequestStatus,
+            name="procurement_approval_request_status",
+        ),
+        nullable=False,
+        default=ApprovalRequestStatus.PENDING,
+    )
+
+    requested_by: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+    )
+
+    requested_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    completed_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    current_step: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=1,
+    )
+
+    total_steps: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=1,
+    )
+
+    comments: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    steps: Mapped[list["ProcurementApprovalStep"]] = relationship(
+        back_populates="approval_request",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+
+class ProcurementApprovalStep(Base):
+    __tablename__ = "procurement_approval_steps"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "approval_request_id",
+            "step_number",
+            name="uq_proc_approval_step_number",
+        ),
+        CheckConstraint(
+            "step_number > 0",
+            name="approval_step_number_positive",
+        ),
+        Index(
+            "ix_proc_approval_step_tenant_status",
+            "tenant_id",
+            "status",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        default=uuid4,
+    )
+
+    tenant_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=False,
+        index=True,
+    )
+
+    approval_request_id: Mapped[UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        ForeignKey(
+            "procurement_approval_requests.id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    step_number: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    status: Mapped[ApprovalStepStatus] = mapped_column(
+        Enum(
+            ApprovalStepStatus,
+            name="procurement_approval_step_status",
+        ),
+        nullable=False,
+        default=ApprovalStepStatus.PENDING,
+    )
+
+    approver_id: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+    )
+
+    decided_by: Mapped[UUID | None] = mapped_column(
+        PGUUID(as_uuid=True),
+        nullable=True,
+    )
+
+    decided_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    comments: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    approval_request: Mapped["ProcurementApprovalRequest"] = relationship(
+        back_populates="steps",
     )

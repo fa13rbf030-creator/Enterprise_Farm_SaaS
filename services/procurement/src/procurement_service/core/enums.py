@@ -155,3 +155,25 @@ class SupplierClaimStatus(StrEnum):
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
     SETTLED = "SETTLED"
+
+
+class ApprovalObjectType(StrEnum):
+    PURCHASE_REQUISITION = "PURCHASE_REQUISITION"
+    PURCHASE_ORDER = "PURCHASE_ORDER"
+    INVOICE_MATCH = "INVOICE_MATCH"
+    SUPPLIER_RETURN = "SUPPLIER_RETURN"
+
+
+class ApprovalRequestStatus(StrEnum):
+    PENDING = "PENDING"
+    IN_PROGRESS = "IN_PROGRESS"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    CANCELLED = "CANCELLED"
+
+
+class ApprovalStepStatus(StrEnum):
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+    SKIPPED = "SKIPPED"

@@ -1,4 +1,6 @@
 from procurement_service.models.procurement import (
+    ProcurementApprovalRequest,
+    ProcurementApprovalStep,
     SupplierReturnLine,
     SupplierReturn,
     SupplierInvoiceMatchLine,
@@ -17,6 +19,8 @@ from procurement_service.models.procurement import (
 )
 
 __all__ = [
+    "ProcurementApprovalRequest",
+    "ProcurementApprovalStep",
     "SupplierReturnLine",
     "SupplierReturn",
     "SupplierInvoiceMatchLine",
