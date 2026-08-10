@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from procurement_service.api.approvals import router as approvals_router
 from procurement_service.api.health import router as health_router
 from procurement_service.api.requisition_approvals import router as requisition_approvals_router
+from procurement_service.api.purchase_order_approvals import router as purchase_order_approvals_router
 from procurement_service.core.config import get_settings
 
 
@@ -16,6 +17,7 @@ app = FastAPI(
 app.include_router(health_router)
 app.include_router(approvals_router)
 app.include_router(requisition_approvals_router)
+app.include_router(purchase_order_approvals_router)
 
 
 @app.get("/")
