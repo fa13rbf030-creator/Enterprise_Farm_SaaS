@@ -5,3 +5,4 @@ from procurement_service.repositories.approval import (
 __all__ = [
     "ProcurementApprovalRepository",
 ]
+from procurement_service.repositories.requisition import PurchaseRequisitionRepository

@@ -13,3 +13,19 @@ __all__ = [
     "ApprovalWorkflowError",
     "ApprovalWorkflowService",
 ]
+
+from procurement_service.services.requisition_approval import (
+    ApprovalNotTerminalError,
+    ApprovalObjectMismatchError,
+    InvalidRequisitionTransitionError,
+    RequisitionApprovalIntegrationError,
+    RequisitionApprovalIntegrationService,
+)
+
+from procurement_service.services.requisition_approval_coordinator import (
+    DuplicateRequisitionApprovalError,
+    RequisitionApprovalCoordinator,
+    RequisitionApprovalCoordinatorError,
+    RequisitionApprovalNotFoundError,
+    RequisitionNotFoundError,
+)
