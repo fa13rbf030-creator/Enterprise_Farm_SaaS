@@ -6,3 +6,7 @@ __all__ = [
     "ProcurementApprovalRepository",
 ]
 from procurement_service.repositories.requisition import PurchaseRequisitionRepository
+
+from procurement_service.repositories.invoice_match import (
+    SupplierInvoiceMatchRepository,
+)

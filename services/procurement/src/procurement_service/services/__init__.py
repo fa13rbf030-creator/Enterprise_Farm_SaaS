@@ -29,3 +29,10 @@ from procurement_service.services.requisition_approval_coordinator import (
     RequisitionApprovalNotFoundError,
     RequisitionNotFoundError,
 )
+
+from procurement_service.services.invoice_match_approval import (
+    InvalidInvoiceMatchTransitionError,
+    InvoiceMatchApprovalIntegrationError,
+    InvoiceMatchApprovalIntegrationService,
+    InvoiceMatchApprovalMismatchError,
+)
