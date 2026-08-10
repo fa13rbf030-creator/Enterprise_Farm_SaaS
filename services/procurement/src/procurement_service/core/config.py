@@ -7,6 +7,12 @@ class Settings(BaseSettings):
     service_name: str = "procurement"
     environment: str = "development"
 
+    jwt_secret: str = (
+        "development-secret-change-before-production-123456"
+    )
+    jwt_algorithm: str = "HS256"
+    token_issuer: str = "enterprise-farm-identity"
+
     database_url: str = (
         "postgresql+asyncpg://saas_user:saas_password"
         "@localhost:5432/enterprise_farm_db"

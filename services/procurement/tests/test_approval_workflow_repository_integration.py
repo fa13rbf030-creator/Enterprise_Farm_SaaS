@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 
@@ -9,7 +10,7 @@ from procurement_service.core.enums import (
     ApprovalRequestStatus,
     ApprovalStepStatus,
 )
-from procurement_service.db.session import AsyncSessionFactory
+from procurement_service.db.session import AsyncSessionFactory, engine
 from procurement_service.models import (
     ProcurementApprovalRequest,
 )
@@ -24,6 +25,27 @@ from procurement_service.services import (
     ApprovalWorkflowService,
 )
 
+
+
+@pytest_asyncio.fixture(
+    scope="module",
+    loop_scope="module",
+    autouse=True,
+)
+async def isolate_async_engine_pool():
+    # Each PostgreSQL integration module owns a distinct
+    # pytest asyncio event loop. Never allow pooled asyncpg
+    # connections created by one module loop to be reused
+    # by another module loop.
+    await engine.dispose(close=False)
+
+    try:
+        yield
+    finally:
+        # Teardown occurs while this module's event loop is
+        # still alive, so its pooled connections can be
+        # closed cleanly.
+        await engine.dispose()
 
 def build_payload(
     *,
